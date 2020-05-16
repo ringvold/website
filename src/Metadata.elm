@@ -12,6 +12,7 @@ import Pages.ImagePath as ImagePath exposing (ImagePath)
 
 type Metadata
     = Page PageMetadata
+    | FrontPage PageMetadata
     | Article ArticleMetadata
     | Author Data.Author.Author
     | BlogIndex
@@ -39,6 +40,10 @@ decoder =
                     "page" ->
                         Decode.field "title" Decode.string
                             |> Decode.map (\title -> Page { title = title })
+
+                    "front-page" ->
+                        Decode.field "title" Decode.string
+                            |> Decode.map (\title -> FrontPage { title = title })
 
                     "blog-index" ->
                         Decode.succeed BlogIndex

@@ -27,6 +27,9 @@ view posts =
                         Metadata.Page meta ->
                             Nothing
 
+                        Metadata.FrontPage meta ->
+                            Nothing
+
                         Metadata.Author _ ->
                             Nothing
 

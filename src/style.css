@@ -1,0 +1,228 @@
+@charset "UTF-8";
+
+/*
+
+  INDEX
+
+  01. Font Face
+  02. Reset
+  03. Main styles
+
+
+*/
+
+
+/* 1. RESET ================================================== */
+
+/*
+* Reset once part of Gumby Framework
+* http://www.gumbyframework.com/
+*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font: inherit; font-size: 100%; vertical-align: baseline; }
+
+html { line-height: 1; }
+
+ol, ul { list-style: none; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
+
+q, blockquote { quotes: none; }
+q:before, q:after, blockquote:before, blockquote:after { content: ""; content: none; }
+
+a img { border: none; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary { display: block; }
+
+* html { font-size: 100%; }
+
+html { font-size: 16px; line-height: 1.625em; }
+
+html * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+
+body { background: white; color: #555555; position: relative; }
+
+html, body { height: 100%; min-height: 100%;  }
+
+
+/* 2. FONTS ================================================== */
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 200;
+    src: local("Source Sans Pro ExtraLight"), local("SourceSansPro-ExtraLight"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGEzfSP8PFPIaW8d4wHl9LSw.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Source Sans Pro"), local("SourceSansPro-Regular"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlDLXPPWpYIJRcQ99gLLWTOQ.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 600;
+    src: local("Source Sans Pro Semibold"), local("SourceSansPro-Semibold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGNF2eBBnhZOFf_rblGEjGiI.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Source Sans Pro Bold"), local("SourceSansPro-Bold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGBgDywzySrQSFSEUM6OqW_g.woff") format("woff");
+}
+
+
+/* 3. MAIN STYLES ================================================== */
+
+body, html
+{
+  background: #E2E4E7;
+  padding: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  position: relative;
+  height: 100%;
+  margin: 0;
+}
+
+
+/* Selected text Color */
+
+::-moz-selection
+{
+  background: none;
+  color: #74BEE1;
+}
+
+::selection
+{
+  background: none;
+  color: #74BEE1;
+}
+
+.centered
+{
+  text-align: center;
+}
+
+b, strong
+{
+  font-weight: 800;
+}
+
+h1
+{
+  font-size: 46px;
+  font-weight: 100;
+  text-transform: none;
+  line-height: 46px;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: 0.33em;
+  margin-bottom: 0.33em;
+}
+
+h2
+{
+  font-size: 46px;
+  font-weight: 100;
+  line-height: 46px;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: 0.33em;
+  margin-bottom: 1em;
+}
+
+span
+{
+  color: #303333;
+  font: 1.5em 'Source Sans Pro', sans-serif;
+  opacity: 0.4;
+  padding-top: 0px;
+}
+
+/* Link */
+
+a
+{
+  color: #46484a;
+  text-decoration: none;
+  outline: none;
+}
+
+a:hover
+{
+  color: #181b1e;
+}
+
+/* Paragrah */
+
+p
+{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 200;
+  color: #98999C;
+  line-height: 30px;
+}
+
+p a
+{
+  border-bottom: 1px dotted #46484a;
+}
+
+p a:hover
+{
+  border-bottom: 1px dotted #181b1e;
+}
+
+/* Button White */
+
+.button-white
+{
+  border-radius: 20px;
+  color: #333;
+  padding: 10px 20px;
+  margin: 0 10px;
+  letter-spacing: 2px;
+  background: #FFF;
+  font-weight: 600;
+  border: 3px solid #FFF;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Button White:hover */
+
+.button-white:hover
+{
+  color: #FFF;
+  border: 3px solid #FFF;
+  background: none;
+}
+
+.container
+{
+  background: url('../img/bg.jpg')#131313;
+  background-size: cover;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.container h1, .container h1 span
+{
+  color: #FFF;
+}
+
+.huge-title {
+  width: 100%;
+}

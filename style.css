@@ -1,5 +1,54 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto&display=swap");
 
+/* 2. FONTS ================================================== */
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 200;
+    src: local("Source Sans Pro ExtraLight"), local("SourceSansPro-ExtraLight"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGEzfSP8PFPIaW8d4wHl9LSw.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Source Sans Pro"), local("SourceSansPro-Regular"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlDLXPPWpYIJRcQ99gLLWTOQ.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 600;
+    src: local("Source Sans Pro Semibold"), local("SourceSansPro-Semibold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGNF2eBBnhZOFf_rblGEjGiI.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Source Sans Pro Bold"), local("SourceSansPro-Bold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGBgDywzySrQSFSEUM6OqW_g.woff") format("woff");
+}
+
+
+/* 3. MAIN STYLES ================================================== */
+
 .avatar img {
   border-radius: 50%;
+}
+
+.button-white {
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+
+.button-white:hover
+{
+  color: #FFF;
+  background: none;
 }

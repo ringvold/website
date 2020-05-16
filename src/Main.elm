@@ -5,11 +5,12 @@ import Data.Author as Author
 import Date
 import DocumentSvg
 import Element exposing (Element)
-import Element.Background
-import Element.Border
+import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Element.Region
 import Feed
+import FrontPage
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
@@ -39,12 +40,12 @@ manifest =
     , categories = [ Pages.Manifest.Category.education ]
     , displayMode = Manifest.Standalone
     , orientation = Manifest.Portrait
-    , description = "elm-pages-starter - A statically typed site generator."
+    , description = "Harald Ringvold. Software developer."
     , iarcRatingId = Nothing
-    , name = "elm-pages-starter"
+    , name = "Harald Ringvold. Software developer."
     , themeColor = Just Color.white
     , startUrl = pages.index
-    , shortName = Just "elm-pages-starter"
+    , shortName = Just "Harald Ringvold. Software developer."
     , sourceIcon = images.iconPng
     }
 
@@ -156,7 +157,15 @@ view siteMetadata page =
     StaticHttp.succeed
         { view =
             \model viewForPage ->
-                Layout.view (pageView model siteMetadata page viewForPage) page
+                case page.frontmatter of
+                    Metadata.FrontPage metadata ->
+                        { title = metadata.title
+                        , body =
+                            FrontPage.view
+                        }
+
+                    _ ->
+                        Layout.view (pageView model siteMetadata page viewForPage) page
         , head = head page.frontmatter
         }
 
@@ -174,10 +183,18 @@ pageView model siteMetadata page viewForPage =
             , body =
                 [ viewForPage
                 ]
+            }
 
-            --        |> Element.textColumn
-            --            [ Element.width Element.fill
-            --            ]
+        Metadata.FrontPage metadata ->
+            { title = metadata.title
+            , body =
+                [ Element.el
+                    [ Element.width Element.fill
+                    , Element.height Element.fill
+                    ]
+                  <|
+                    Element.column [] [ Element.text "Eg testar" ]
+                ]
             }
 
         Metadata.Article metadata ->
@@ -193,7 +210,7 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.BlogIndex ->
-            { title = "elm-pages blog"
+            { title = "Blog"
             , body =
                 [ Element.column [ Element.padding 20, Element.centerX ] [ Index.view siteMetadata ]
                 ]
@@ -214,7 +231,7 @@ header currentPath =
         [ Element.el
             [ Element.height (Element.px 4)
             , Element.width Element.fill
-            , Element.Background.gradient
+            , Background.gradient
                 { angle = 0.2
                 , steps =
                     [ Element.rgb255 0 242 96
@@ -228,21 +245,19 @@ header currentPath =
             , Element.spaceEvenly
             , Element.width Element.fill
             , Element.Region.navigation
-            , Element.Border.widthEach { bottom = 1, left = 0, right = 0, top = 0 }
-            , Element.Border.color (Element.rgba255 40 80 40 0.4)
+            , Border.widthEach { bottom = 1, left = 0, right = 0, top = 0 }
+            , Border.color (Element.rgba255 40 80 40 0.4)
             ]
             [ Element.link []
                 { url = "/"
                 , label =
                     Element.row [ Font.size 30, Element.spacing 16 ]
                         [ DocumentSvg.view
-                        , Element.text "elm-pages-starter"
+                        , Element.text "Harald"
                         ]
                 }
             , Element.row [ Element.spacing 15 ]
-                [ elmDocsLink
-                , githubRepoLink
-                , highlightableLink currentPath pages.blog.directory "Blog"
+                [ highlightableLink currentPath pages.blog.directory "Blog"
                 ]
             ]
         ]
@@ -291,7 +306,23 @@ head metadata =
                 Metadata.Page meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages-starter"
+                        , siteName = "Harald Ringvold"
+                        , image =
+                            { url = images.iconPng
+                            , alt = "elm-pages logo"
+                            , dimensions = Nothing
+                            , mimeType = Nothing
+                            }
+                        , description = siteTagline
+                        , locale = Nothing
+                        , title = meta.title
+                        }
+                        |> Seo.website
+
+                Metadata.FrontPage meta ->
+                    Seo.summaryLarge
+                        { canonicalUrlOverride = Nothing
+                        , siteName = "Harald Ringvold"
                         , image =
                             { url = images.iconPng
                             , alt = "elm-pages logo"
@@ -381,12 +412,12 @@ head metadata =
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://elm-pages-starter.netlify.com"
+    "https://ringvold.netlify.com"
 
 
 siteTagline : String
 siteTagline =
-    "Starter blog for elm-pages"
+    "Harald Ringvold"
 
 
 publishedDateView metadata =
@@ -394,29 +425,3 @@ publishedDateView metadata =
         (metadata.published
             |> Date.format "MMMM ddd, yyyy"
         )
-
-
-githubRepoLink : Element msg
-githubRepoLink =
-    Element.newTabLink []
-        { url = "https://github.com/dillonkearns/elm-pages"
-        , label =
-            Element.image
-                [ Element.width (Element.px 22)
-                , Font.color Palette.color.primary
-                ]
-                { src = ImagePath.toString Pages.images.github, description = "Github repo" }
-        }
-
-
-elmDocsLink : Element msg
-elmDocsLink =
-    Element.newTabLink []
-        { url = "https://package.elm-lang.org/packages/dillonkearns/elm-pages/latest/"
-        , label =
-            Element.image
-                [ Element.width (Element.px 22)
-                , Font.color Palette.color.primary
-                ]
-                { src = ImagePath.toString Pages.images.elmLogo, description = "Elm Package Docs" }
-        }
