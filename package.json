@@ -6,5 +6,8 @@
   },
   "devDependencies": {
     "elm-pages": "^2.1.6"
+  },
+  "dependencies": {
+    "elm-tooling": "^1.4.0"
   }
 }
