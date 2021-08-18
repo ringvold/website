@@ -1,18 +1,25 @@
 module Page.Blog.Slug_ exposing (Data, Model, Msg, page)
 
+import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
-import Html
-import Markdown
-import OptimizedDecoder
+import Html as HtmlOrig
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attr exposing (css)
+import MarkdownCodec
+import MarkdownHtmlRenderer
+import MarkdownHtmlRenderer2
+import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Posts
 import Shared
+import Tailwind.Breakpoints as Breakpoints
+import Tailwind.Utilities as Tw
 import View exposing (View)
 
 
@@ -65,14 +72,17 @@ data routeParams =
     findFileBySlug routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.File.bodyWithFrontmatter
-                    (\body ->
-                        OptimizedDecoder.map
-                            (Data body)
-                            (OptimizedDecoder.field "title" OptimizedDecoder.string)
+                DataSource.map2 Data
+                    (DataSource.File.onlyFrontmatter decoder filePath)
+                    (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer filePath
+                        |> DataSource.resolve
                     )
-                    filePath
             )
+
+
+decoder : Decoder String
+decoder =
+    Decode.field "title" Decode.string
 
 
 head :
@@ -96,8 +106,8 @@ head static =
 
 
 type alias Data =
-    { body : String
-    , title : String
+    { title : String
+    , body : List (Html Msg)
     }
 
 
@@ -109,7 +119,28 @@ view :
 view maybeUrl sharedModel static =
     { title = static.routeParams.slug
     , body =
-        [ Html.h1 [] [ Html.text static.data.title ]
-        , Markdown.toHtml [] static.data.body
+        [ Html.h1
+            [ css
+                [ Tw.font_bold
+                , Tw.font_sans
+                , Tw.break_normal
+                , Tw.text_gray_900
+                , Tw.pt_6
+                , Tw.pb_2
+                , Breakpoints.md [ Tw.text_4xl ]
+                , Tw.text_3xl
+                ]
+            ]
+            [ Html.text static.data.title ]
         ]
+            ++ static.data.body
     }
+
+
+renderMarkdown markdown =
+    case MarkdownHtmlRenderer.render markdown of
+        Ok html ->
+            html
+
+        Err err ->
+            [ Html.text "Error parsing blog post" ]
