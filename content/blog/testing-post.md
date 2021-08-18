@@ -23,6 +23,22 @@ Festum solo laetos utque, fer te adhuc numina ignibus et pavidum et gurgite,
 solane conceditur ripis, ad. Addiderat et intus. Occidit trepidumque galeaque
 sic nunc **in**, micantes liquido.
 
+Html:
+```html
+<header class="site-header outer">
+    <div class="inner">
+        {{> "site-nav"}}
+    </div>
+</header>
+```
+Elm:
+
+```elm
+type alias Data =
+    { title : String
+    , body : List (Html Msg)
+    }
+```
 ## Saevae has
 
 Alebat *quid frangitur* strenua magno: aquas ipsa torrens mihi! Auctor ibi.
