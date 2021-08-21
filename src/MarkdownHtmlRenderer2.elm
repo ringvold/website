@@ -72,7 +72,7 @@ reduceHtmlDataSource block =
                                         [ Attr.class "anchor-icon"
                                         , css
                                             [ Tw.ml_2
-                                            , Tw.text_gray_500
+                                            , Tw.text_gray_400
                                             , Tw.select_none
                                             ]
                                         ]

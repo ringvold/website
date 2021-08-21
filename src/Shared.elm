@@ -5,8 +5,8 @@ import Css
 import Css.Global
 import DataSource
 import Html exposing (Html)
-import Html.Styled exposing (a, div, text)
-import Html.Styled.Attributes as Attr exposing (css)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes as Attr exposing (css, id)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
@@ -99,7 +99,7 @@ view :
     -> Model
     -> (Msg -> msg)
     -> View msg
-    -> { body : Html msg, title : String }
+    -> { body : Html.Html msg, title : String }
 view sharedData page model toMsg pageView =
     { body =
         div
@@ -110,20 +110,18 @@ view sharedData page model toMsg pageView =
                 , Tw.tracking_normal
                 , Tw.w_full
                 , Tw.h_full
-
-                -- , Tw.w_screen
-                -- , Tw.h_screen
+                , Tw.pb_4
                 ]
             ]
             [ Css.Global.global Tw.globalStyles
             , nav
             , div
                 [ css
-                    [ Tw.container
-                    , Breakpoints.md [ Tw.max_w_3xl ]
+                    [ Breakpoints.md [ Tw.max_w_3xl ]
                     , Tw.mx_auto
                     , Tw.pt_20
                     , Css.fontFamilies [ Css.qt "Georgia", .value Css.serif ]
+                    , Tw.container
                     ]
                 ]
                 [ div
@@ -147,7 +145,7 @@ nav : Html.Styled.Html msg
 nav =
     Html.Styled.nav
         [ Attr.id "header"
-        , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0 ]
+        , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0, Tw.bg_white, Tw.shadow ]
         ]
         [ div
             [ css
@@ -163,7 +161,7 @@ nav =
                 ]
             ]
             [ div
-                [ css [ Tw.pl_4 ] ]
+                [ id "header-title", css [ Tw.pl_4 ] ]
                 [ a
                     [ css
                         [ Tw.text_gray_900
@@ -176,6 +174,69 @@ nav =
                         ]
                     ]
                     [ text "Harald Ringvold" ]
+                ]
+            , div
+                [ id "collapsed-nav-content"
+                , css [ Tw.pl_4 ]
+                ]
+                []
+            , div
+                [ id "nav-content"
+                , css
+                    [ Breakpoints.lg
+                        [ Tw.flex
+                        , Tw.items_center
+                        , Tw.w_auto
+                        , Tw.block
+                        , Tw.mt_0
+                        ]
+                    , Breakpoints.md [ Tw.bg_transparent ]
+                    , Tw.w_full
+                    , Tw.flex_grow
+                    , Tw.hidden
+                    , Tw.mt_2
+                    , Tw.z_20
+                    , Tw.bg_gray_100
+                    ]
+                ]
+                [ ul
+                    [ css
+                        [ Breakpoints.lg [ Tw.flex ]
+                        , Tw.justify_end
+                        , Tw.flex_1
+                        , Tw.items_center
+                        ]
+                    ]
+                    [ li [ css [ Tw.mr_3 ] ]
+                        [ a
+                            [ css
+                                [ Tw.inline_block
+                                , Tw.py_2
+                                , Tw.px_4
+                                , Tw.text_gray_900
+                                , Tw.font_bold
+                                , Tw.no_underline
+                                , Tw.cursor_pointer
+                                , Css.hover [ Tw.text_gray_900, Tw.underline ]
+                                ]
+                            ]
+                            [ text "Active" ]
+                        ]
+                    , li [ css [ Tw.mr_3 ] ]
+                        [ a
+                            [ css
+                                [ Tw.inline_block
+                                , Tw.py_2
+                                , Tw.px_4
+                                , Tw.text_gray_900
+                                , Tw.no_underline
+                                , Tw.cursor_pointer
+                                , Css.hover [ Tw.text_gray_900, Tw.underline ]
+                                ]
+                            ]
+                            [ text "Link" ]
+                        ]
+                    ]
                 ]
             ]
         ]
