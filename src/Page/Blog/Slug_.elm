@@ -1,12 +1,10 @@
 module Page.Blog.Slug_ exposing (Data, Model, Msg, page)
 
-import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
-import Html as HtmlOrig
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import MarkdownCodec
@@ -72,7 +70,8 @@ data routeParams =
     findFileBySlug routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.map2 Data
+                DataSource.map3 Data
+                    (MarkdownCodec.titleAndDescription filePath)
                     (DataSource.File.onlyFrontmatter decoder filePath)
                     (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer filePath
                         |> DataSource.resolve
@@ -91,22 +90,23 @@ head :
 head static =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
+        , siteName = "Harald Ringvold"
         , image =
             { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
+            , alt = "ringvold.io logo"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = "Harald Ringvold. Software developer."
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = static.data.info.title ++ " - ringvold.io"
         }
         |> Seo.website
 
 
 type alias Data =
-    { title : String
+    { info : { title : String, description : String }
+    , slug : String
     , body : List (Html Msg)
     }
 
@@ -117,7 +117,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    { title = static.routeParams.slug
+    { title = static.data.info.title ++ " - ringvold.io"
     , body =
         [ Html.h1
             [ css
@@ -131,7 +131,7 @@ view maybeUrl sharedModel static =
                 , Tw.text_3xl
                 ]
             ]
-            [ Html.text static.data.title ]
+            [ Html.text static.data.info.title ]
         ]
             ++ static.data.body
     }

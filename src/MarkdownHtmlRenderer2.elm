@@ -58,6 +58,9 @@ reduceHtmlDataSource block =
                         , Attr.attribute "name" (rawTextToId rawText)
                         , css
                             [ Tw.py_2
+                            , Tw.mt_10
+                            , Tw.text_3xl
+                            , Tw.font_medium
                             , Tw.font_sans
                             ]
                         ]
@@ -69,8 +72,7 @@ reduceHtmlDataSource block =
                             ]
                             (children
                                 ++ [ Html.span
-                                        [ Attr.class "anchor-icon"
-                                        , css
+                                        [ css
                                             [ Tw.ml_2
                                             , Tw.text_gray_400
                                             , Tw.select_none
@@ -106,7 +108,17 @@ reduceHtmlDataSource block =
                             , Tw.font_sans
                             ]
                         ]
-                        children
+                        (children
+                            ++ [ Html.span
+                                    [ css
+                                        [ Tw.ml_2
+                                        , Tw.text_gray_400
+                                        , Tw.select_none
+                                        ]
+                                    ]
+                                    [ Html.text "#" ]
+                               ]
+                        )
             )
                 |> DataSource.succeed
 
@@ -356,6 +368,7 @@ shikiDataSource info =
                 (Shiki.view
                     [ Html.Attributes.style "font-family" "IBM Plex Mono"
                     , Html.Attributes.style "padding" "0.75rem 1.25rem"
+                    , Html.Attributes.style "margin" "0.75rem 1.25rem"
                     , Html.Attributes.style "font-size" "13px"
                     , Html.Attributes.style "border-radius" "0.5rem"
                     ]

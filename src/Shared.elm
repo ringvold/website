@@ -131,6 +131,7 @@ view sharedData page model toMsg pageView =
                         , Tw.text_gray_800
                         , Tw.text_xl
                         , Tw.leading_normal
+                        -- , Tw.prose_xl
                         ]
                     ]
                     pageView.body
@@ -145,9 +146,17 @@ nav : Html.Styled.Html msg
 nav =
     Html.Styled.nav
         [ Attr.id "header"
-        , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0, Tw.bg_white, Tw.shadow ]
+        , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0 ]
+
+        -- , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0, Tw.bg_white, Tw.shadow ]
         ]
-        [ div
+        [ styled div
+            [ Tw.h_1, Tw.z_20, Tw.top_0 ]
+            [ id "progress"
+            , Attr.attribute "style" "background: linear-gradient(to right, #4dc0b5 var(--scroll), transparent 0);"
+            ]
+            []
+        , div
             [ css
                 [ Tw.flex
                 , Breakpoints.md [ Tw.max_w_4xl ]
@@ -179,7 +188,8 @@ nav =
                 [ id "collapsed-nav-content"
                 , css [ Tw.pl_4 ]
                 ]
-                []
+                [ button [ id "nav-toggle" ] []
+                ]
             , div
                 [ id "nav-content"
                 , css
