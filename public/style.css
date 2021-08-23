@@ -1,14 +1,89 @@
+/* FRONTPAGE */
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 200;
+  src: local("Source Sans Pro ExtraLight"), local("SourceSansPro-ExtraLight"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGEzfSP8PFPIaW8d4wHl9LSw.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Source Sans Pro"), local("SourceSansPro-Regular"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlDLXPPWpYIJRcQ99gLLWTOQ.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Source Sans Pro Semibold"), local("SourceSansPro-Semibold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGNF2eBBnhZOFf_rblGEjGiI.woff") format("woff");
+}
+
+@font-face
+{
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Source Sans Pro Bold"), local("SourceSansPro-Bold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGBgDywzySrQSFSEUM6OqW_g.woff") format("woff");
+}
+
+
+.frontpage .button-white {
+  border-radius: 20px;
+  color: #333;
+  padding: 10px 20px;
+  margin: 0 10px;
+  letter-spacing: 2px;
+  background: #FFF;
+  font-weight: 600;
+  border: 3px solid #FFF;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-decoration: none
+  font-size: 12px;
+  text-align: center;
+}
+
+.frontpage h1 {
+  color: #FFF;
+  font-size: 4.3em;
+  font-weight: 400;
+  text-transform: none;
+  line-height: 46px;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: 0.33em;
+  margin-bottom: 0.50em;
+  opacity: 0.4;
+}
+
+.frontpage h2 {
+  color: #555;
+  font-size: 46px;
+  font-weight: 100;
+  line-height: 46px;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: 0.33em;
+  margin-bottom: 1.2em;
+}
+
+/* BLOG */
+
 .shadow {
-    --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+  --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
 }
 
 .bg-white {
-    --tw-bg-opacity: 1;
-    background-color: rgba(255,255,255,var(--tw-bg-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgba(255,255,255,var(--tw-bg-opacity));
 }
 
 .bg-gray-100 {
-    --tw-bg-opacity: 1;
-    background-color: rgba(243,244,246,var(--tw-bg-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgba(243,244,246,var(--tw-bg-opacity));
 }

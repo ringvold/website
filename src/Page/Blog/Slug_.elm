@@ -18,6 +18,7 @@ import Posts
 import Shared
 import Tailwind.Breakpoints as Breakpoints
 import Tailwind.Utilities as Tw
+import Timestamps exposing (Timestamps)
 import View exposing (View)
 
 
@@ -70,18 +71,15 @@ data routeParams =
     findFileBySlug routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.map3 Data
+                DataSource.map4 Data
                     (MarkdownCodec.titleAndDescription filePath)
-                    (DataSource.File.onlyFrontmatter decoder filePath)
-                    (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer filePath
+                    (DataSource.succeed routeParams.slug)
+                    (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer
+                        filePath
                         |> DataSource.resolve
                     )
+                    (Timestamps.data filePath)
             )
-
-
-decoder : Decoder String
-decoder =
-    Decode.field "title" Decode.string
 
 
 head :
@@ -93,13 +91,13 @@ head static =
         , siteName = "Harald Ringvold"
         , image =
             { url = Pages.Url.external "TODO"
-            , alt = "ringvold.io logo"
+            , alt = "Post image"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "Harald Ringvold. Software developer."
+        , description = static.data.info.description
         , locale = Nothing
-        , title = static.data.info.title ++ " - ringvold.io"
+        , title = static.data.info.title
         }
         |> Seo.website
 
@@ -108,6 +106,7 @@ type alias Data =
     { info : { title : String, description : String }
     , slug : String
     , body : List (Html Msg)
+    , timestamps : Timestamps
     }
 
 

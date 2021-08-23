@@ -101,45 +101,59 @@ view :
     -> View msg
     -> { body : Html.Html msg, title : String }
 view sharedData page model toMsg pageView =
-    { body =
-        div
-            [ css
-                [ Tw.bg_gray_100
-                , Tw.font_sans
-                , Tw.leading_normal
-                , Tw.tracking_normal
-                , Tw.w_full
-                , Tw.h_full
-                , Tw.pb_4
-                ]
-            ]
-            [ Css.Global.global Tw.globalStyles
-            , nav
-            , div
+    if not <| String.isEmpty <| Path.toRelative page.path then
+        { body =
+            div
                 [ css
-                    [ Breakpoints.md [ Tw.max_w_3xl ]
-                    , Tw.mx_auto
-                    , Tw.pt_20
-                    , Css.fontFamilies [ Css.qt "Georgia", .value Css.serif ]
-                    , Tw.container
+                    [ Tw.bg_gray_100
+                    , Tw.font_sans
+                    , Tw.leading_normal
+                    , Tw.tracking_normal
+                    , Tw.w_full
+                    , Tw.h_full
+                    , Tw.pb_4
                     ]
                 ]
-                [ div
+                [ Css.Global.global
+                    (Css.Global.body
+                        [ Tw.bg_gray_100
+                        ]
+                        :: Tw.globalStyles
+                    )
+                , nav
+                , div
                     [ css
-                        [ Breakpoints.md [ Tw.px_6 ]
-                        , Tw.px_4
-                        , Tw.text_gray_800
-                        , Tw.text_xl
-                        , Tw.leading_normal
-                        -- , Tw.prose_xl
+                        [ Breakpoints.md [ Tw.max_w_3xl ]
+                        , Tw.mx_auto
+                        , Tw.pt_20
+                        , Css.fontFamilies [ Css.qt "Georgia", .value Css.serif ]
+                        , Tw.container
                         ]
                     ]
-                    pageView.body
+                    [ div
+                        [ css
+                            [ Breakpoints.md [ Tw.px_6 ]
+                            , Tw.px_4
+                            , Tw.text_gray_800
+                            , Tw.text_xl
+                            , Tw.leading_normal
+
+                            -- , Tw.prose_xl
+                            ]
+                        ]
+                        pageView.body
+                    ]
                 ]
-            ]
-            |> Html.Styled.toUnstyled
-    , title = pageView.title
-    }
+                |> Html.Styled.toUnstyled
+        , title = pageView.title
+        }
+
+    else
+        { title = pageView.title
+        , body =
+            div [] pageView.body
+                |> Html.Styled.toUnstyled
+        }
 
 
 nav : Html.Styled.Html msg
@@ -172,7 +186,8 @@ nav =
             [ div
                 [ id "header-title", css [ Tw.pl_4 ] ]
                 [ a
-                    [ css
+                    [ Attr.href <| Path.toAbsolute <| Route.toPath Route.Blog
+                    , css
                         [ Tw.text_gray_900
                         , Tw.text_base
                         , Tw.no_underline
