@@ -2,15 +2,12 @@ module Page.Blog exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import DataSource.File
-import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import Link
 import MarkdownCodec
-import MarkdownHtmlRenderer
-import MarkdownHtmlRenderer2
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -50,10 +47,10 @@ type alias Data =
 
 
 type alias BlogEntry =
-    { title : String
+    { info : { title : String, description : String }
+    , draft : Bool
     , route : Route
-    , date : String
-    , excerpt : String
+    , date : Timestamps
     }
 
 
@@ -68,18 +65,30 @@ data =
         |> DataSource.andThen
             (List.map
                 (\{ slug, filePath } ->
-                    MarkdownCodec.titleAndDescription filePath
-                        |> DataSource.map
-                            (\{ title, description } ->
-                                { title = title
-                                , route = Route.Blog__Slug_ { slug = slug }
-                                , date = "Yesterday"
-                                , excerpt = String.left 80 description ++ "..."
-                                }
-                            )
+                    DataSource.map4 BlogEntry
+                        (MarkdownCodec.titleAndDescription filePath)
+                        (draftDecoder filePath)
+                        (DataSource.succeed <| Route.Blog__Slug_ { slug = slug })
+                        (Timestamps.data filePath)
                 )
                 >> DataSource.combine
             )
+        |> DataSource.map (List.filter (.draft >> not))
+
+
+draftDecoder : String -> DataSource Bool
+draftDecoder filePath =
+    DataSource.File.onlyFrontmatter
+        (Decode.optionalField "draft" Decode.bool)
+        filePath
+        |> DataSource.map (Maybe.withDefault False)
+
+
+blogEntryDecoder : String -> Decoder { title : String, draft : Bool, body : String }
+blogEntryDecoder body =
+    Decode.map2 (\title draft -> { title = title, draft = draft, body = body })
+        (Decode.field "title" Decode.string)
+        (Decode.field "draft" Decode.bool)
 
 
 head :
@@ -129,6 +138,6 @@ viewBlogEntry entry =
                 , Tw.text_3xl
                 ]
             ]
-            [ Link.link entry.route [] (text entry.title) ]
-        , p [] [ text entry.excerpt ]
+            [ Link.link entry.route [] (text entry.info.title) ]
+        , p [] [ text entry.info.description ]
         ]
