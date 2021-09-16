@@ -50,7 +50,7 @@ type alias BlogEntry =
     { info : { title : String, description : String }
     , draft : Bool
     , route : Route
-    , date : Timestamps
+    , timestamps : Timestamps
     }
 
 
@@ -73,7 +73,7 @@ data =
                 )
                 >> DataSource.combine
             )
-        |> DataSource.map (List.filter (.draft >> not))
+        |> DataSource.map (List.filter .draft)
 
 
 draftDecoder : String -> DataSource Bool
@@ -82,13 +82,6 @@ draftDecoder filePath =
         (Decode.optionalField "draft" Decode.bool)
         filePath
         |> DataSource.map (Maybe.withDefault False)
-
-
-blogEntryDecoder : String -> Decoder { title : String, draft : Bool, body : String }
-blogEntryDecoder body =
-    Decode.map2 (\title draft -> { title = title, draft = draft, body = body })
-        (Decode.field "title" Decode.string)
-        (Decode.field "draft" Decode.bool)
 
 
 head :
@@ -128,16 +121,17 @@ viewBlogEntry entry =
     div []
         [ Html.h2
             [ css
-                [ Tw.font_bold
+                [ Breakpoints.md [ Tw.text_4xl ]
+                , Tw.font_bold
                 , Tw.font_sans
                 , Tw.break_normal
                 , Tw.text_gray_900
                 , Tw.pt_6
                 , Tw.pb_2
-                , Breakpoints.md [ Tw.text_4xl ]
                 , Tw.text_3xl
                 ]
             ]
             [ Link.link entry.route [] (text entry.info.title) ]
+        , Shared.timestampView entry
         , p [] [ text entry.info.description ]
         ]

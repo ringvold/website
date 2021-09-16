@@ -7,7 +7,7 @@ import Json.Encode
 import List.Extra
 import OptimizedDecoder as Decode exposing (Decoder)
 import Result.Extra
-import Time
+import Time exposing (utc)
 
 
 type alias Timestamps =
@@ -60,10 +60,5 @@ format posix =
         , DateFormat.text ", "
         , DateFormat.yearNumber
         ]
-        pacificZone
+        utc
         posix
-
-
-pacificZone : Time.Zone
-pacificZone =
-    Time.customZone (-60 * 7) []

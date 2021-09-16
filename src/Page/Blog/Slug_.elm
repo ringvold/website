@@ -131,6 +131,7 @@ view maybeUrl sharedModel static =
                 ]
             ]
             [ Html.text static.data.info.title ]
+        , Shared.timestampView static.data
         ]
             ++ static.data.body
     }

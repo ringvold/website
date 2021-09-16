@@ -8,6 +8,7 @@
     "elm-pages": "^2.1.6",
     "elm-tailwind-modules": "^0.3.2",
     "postcss": "^8.3.6",
+    "prettier": "^2.4.1",
     "shiki": "^0.9.6",
     "tailwindcss": "^2.2.7"
   },
