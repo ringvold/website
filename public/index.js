@@ -3,9 +3,10 @@
 /** @type ElmPagesInit */
 export default {
   load: async function (elmLoaded) {
-    window.addEventListener('DOMContentLoaded', (event) => {
-      console.log('DOM fully loaded and parsed');
-      scrollProgress();
+    window.addEventListener("DOMContentLoaded", (event) => {
+      console.log("DOM fully loaded and parsed");
+      // scrollProgress();
+      // headerNotAtTop();
     });
     const app = await elmLoaded;
     console.log("App loaded", app);
@@ -15,27 +16,45 @@ export default {
   },
 };
 
+function headerNotAtTop(params) {
+  if (
+    "IntersectionObserver" in window &&
+    "IntersectionObserverEntry" in window &&
+    "intersectionRatio" in window.IntersectionObserverEntry.prototype
+  ) {
+
+    let observer = new IntersectionObserver((entries) => {
+      if (entries[0].boundingClientRect.y < 0) {
+        document.body.classList.add("header-not-at-top");
+      } else {
+        document.body.classList.remove("header-not-at-top");
+      }
+    });
+    observer.observe(document.querySelector("#top-of-site-pixel-anchor"));
+  }
+}
+
 function scrollProgress(params) {
   /* Progress bar */
   //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
   var h = document.documentElement,
     b = document.body,
-    st = 'scrollTop',
-    sh = 'scrollHeight',
-    progress = document.querySelector('#progress'),
+    st = "scrollTop",
+    sh = "scrollHeight",
+    progress = document.querySelector("#progress"),
     scroll;
   var scrollpos = window.scrollY;
   var header = document.getElementById("header");
   var navcontent = document.getElementById("nav-content");
 
-  document.addEventListener('scroll', function () {
-
+  document.addEventListener("scroll", function () {
     /*Refresh scroll % width*/
-    scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
-    progress.style.setProperty('--scroll', scroll + '%');
+    scroll = ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100;
+    progress.style.setProperty("--scroll", scroll + "%");
 
     /*Apply classes for slide in bar*/
     scrollpos = window.scrollY;
+    console.log("scrollpos", scrollpos);
 
     if (scrollpos > 10) {
       header.classList.add("bg-white");
@@ -47,15 +66,11 @@ function scrollProgress(params) {
       header.classList.remove("shadow");
       navcontent.classList.remove("bg-white");
       navcontent.classList.add("bg-gray-100");
-
     }
-
   });
-
 
   //Javascript to toggle the menu
   document.getElementById('nav-toggle').onclick = function () {
     document.getElementById("nav-content").classList.toggle("hidden");
   }
-
 }

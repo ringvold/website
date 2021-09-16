@@ -1,9 +1,10 @@
-module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
+module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template, timestampView)
 
 import Browser.Navigation
 import Css
 import Css.Global
 import DataSource
+import DateFormat
 import Html exposing (Html)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attr exposing (css, id)
@@ -14,6 +15,8 @@ import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
 import Tailwind.Breakpoints as Breakpoints
 import Tailwind.Utilities as Tw
+import Time exposing (Posix, Zone, utc)
+import Timestamps exposing (Timestamps)
 import View exposing (View)
 
 
@@ -125,7 +128,6 @@ view sharedData page model toMsg pageView =
                     [ css
                         [ Breakpoints.md [ Tw.max_w_3xl ]
                         , Tw.mx_auto
-                        , Tw.pt_20
                         , Css.fontFamilies [ Css.qt "Georgia", .value Css.serif ]
                         , Tw.container
                         ]
@@ -137,8 +139,6 @@ view sharedData page model toMsg pageView =
                             , Tw.text_gray_800
                             , Tw.text_xl
                             , Tw.leading_normal
-
-                            -- , Tw.prose_xl
                             ]
                         ]
                         pageView.body
@@ -160,17 +160,14 @@ nav : Html.Styled.Html msg
 nav =
     Html.Styled.nav
         [ Attr.id "header"
-        , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0 ]
-
-        -- , css [ Tw.fixed, Tw.w_full, Tw.z_10, Tw.top_0, Tw.bg_white, Tw.shadow ]
-        ]
-        [ styled div
-            [ Tw.h_1, Tw.z_20, Tw.top_0 ]
-            [ id "progress"
-            , Attr.attribute "style" "background: linear-gradient(to right, #4dc0b5 var(--scroll), transparent 0);"
+        , css
+            [ Tw.w_full
+            , Tw.z_10
+            , Tw.top_0
+            , Tw.border_t_4
             ]
-            []
-        , div
+        ]
+        [ div
             [ css
                 [ Tw.flex
                 , Breakpoints.md [ Tw.max_w_4xl ]
@@ -239,29 +236,40 @@ nav =
                                 , Tw.py_2
                                 , Tw.px_4
                                 , Tw.text_gray_900
-                                , Tw.font_bold
                                 , Tw.no_underline
                                 , Tw.cursor_pointer
                                 , Css.hover [ Tw.text_gray_900, Tw.underline ]
                                 ]
                             ]
-                            [ text "Active" ]
-                        ]
-                    , li [ css [ Tw.mr_3 ] ]
-                        [ a
-                            [ css
-                                [ Tw.inline_block
-                                , Tw.py_2
-                                , Tw.px_4
-                                , Tw.text_gray_900
-                                , Tw.no_underline
-                                , Tw.cursor_pointer
-                                , Css.hover [ Tw.text_gray_900, Tw.underline ]
-                                ]
-                            ]
-                            [ text "Link" ]
+                            [ text "About" ]
                         ]
                     ]
                 ]
             ]
+        ]
+
+
+timestampView : { a | timestamps : { b | created : Posix, updated : Posix } } -> Html.Styled.Html msg
+timestampView entry =
+    div
+        [ css
+            [ Tw.font_sans
+            , Tw.text_sm
+            , Tw.mb_5
+            ]
+        ]
+        [ span [] [ text <| "Posted " ++ dateFormatter utc entry.timestamps.created ]
+        , span [ css [ Tw.mx_2 ] ] [ text "|" ]
+        , span [] [ text <| "Updated " ++ dateFormatter utc entry.timestamps.updated ]
+        ]
+
+
+dateFormatter : Zone -> Posix -> String
+dateFormatter =
+    DateFormat.format
+        [ DateFormat.monthNameFull
+        , DateFormat.text " "
+        , DateFormat.dayOfMonthSuffix
+        , DateFormat.text ", "
+        , DateFormat.yearNumber
         ]

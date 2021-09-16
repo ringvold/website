@@ -44,7 +44,7 @@
   border: 3px solid #FFF;
   cursor: pointer;
   text-transform: uppercase;
-  text-decoration: none
+  text-decoration: none;
   font-size: 12px;
   text-align: center;
 }
@@ -73,17 +73,23 @@
 
 /* BLOG */
 
-.shadow {
-  --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+nav {
+  --tw-border-opacity: 1;
 }
 
-.bg-white {
+.header-not-at-top nav {
   --tw-bg-opacity: 1;
   background-color: rgba(255,255,255,var(--tw-bg-opacity));
+  --tw-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+  border-top-color: #4dc0b5;
+  --tw-border-opacity: 0.5;
 }
 
-.bg-gray-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgba(243,244,246,var(--tw-bg-opacity));
+#top-of-site-pixel-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  top: 1px;
+  left: 0;
 }
