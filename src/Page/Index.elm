@@ -122,14 +122,12 @@ view _ _ _ =
                     [ text "Developer" ]
                 , a
                     [ Attr.class "button-white"
-
-                    --, linkStyle
+                    , Attr.href "https://github.com/ringvold"
                     ]
                     [ text "Github" ]
                 , a
                     [ Attr.class "button-white"
-
-                    --, linkStyle
+                    , Attr.href "https://twitter.com/hringvold"
                     ]
                     [ text "Twitter" ]
                 , Link.link Route.Blog
