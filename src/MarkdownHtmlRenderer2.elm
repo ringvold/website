@@ -83,6 +83,37 @@ reduceHtmlDataSource block =
                             )
                         ]
 
+                Block.H3 ->
+                    Html.h3
+                        [ Attr.id (rawTextToId rawText)
+                        , Attr.attribute "name" (rawTextToId rawText)
+                        , css
+                            [ Tw.py_2
+                            , Tw.mt_10
+                            , Tw.text_2xl
+                            , Tw.font_medium
+                            , Tw.font_sans
+                            ]
+                        ]
+                        [ Html.a
+                            [ Attr.href <| "#" ++ rawTextToId rawText
+                            , css
+                                [ Tw.no_underline |> Css.important
+                                ]
+                            ]
+                            (children
+                                ++ [ Html.span
+                                        [ css
+                                            [ Tw.ml_2
+                                            , Tw.text_gray_400
+                                            , Tw.select_none
+                                            ]
+                                        ]
+                                        [ Html.text "#" ]
+                                   ]
+                            )
+                        ]
+
                 _ ->
                     (case level of
                         Block.H1 ->
@@ -108,42 +139,13 @@ reduceHtmlDataSource block =
                             , Tw.font_sans
                             ]
                         ]
-                        (children
-                            ++ [ Html.span
-                                    [ css
-                                        [ Tw.ml_2
-                                        , Tw.text_gray_400
-                                        , Tw.select_none
-                                        ]
-                                    ]
-                                    [ Html.text "#" ]
-                               ]
-                        )
+                        children
             )
                 |> DataSource.succeed
 
         Scaffolded.CodeBlock info ->
             shikiDataSource info
 
-        --SyntaxHighlight.elm body
-        --    |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
-        --    |> Result.map Html.fromUnstyled
-        --    |> Result.withDefault
-        --        (Html.pre
-        --            [ css
-        --                [ Tw.border_8 |> Css.important
-        --                ]
-        --            ]
-        --            [ Html.code [] [ Html.text details.body ] ]
-        --        )
-        --    |> List.singleton
-        --    |> Html.div
-        --        [ css
-        --            [ Tw.mt_8
-        --            , Tw.mb_8
-        --            ]
-        --        ]
-        --    |> DataSource.succeed
         Scaffolded.Text string ->
             DataSource.succeed (Html.text string)
 
