@@ -6,7 +6,7 @@
     "tailwind": "elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js"
   },
   "devDependencies": {
-    "elm-pages": "^2.1.6",
+    "elm-pages": "2.1.6",
     "elm-tailwind-modules": "^0.3.2",
     "postcss": "^8.3.6",
     "prettier": "^2.4.1",
