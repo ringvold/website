@@ -76,6 +76,8 @@ reduceHtmlDataSource block =
                                             [ Tw.ml_2
                                             , Tw.text_gray_400
                                             , Tw.select_none
+                                            , Css.marginLeft (Css.px -32)
+                                            , Tw.float_left
                                             ]
                                         ]
                                         [ Html.text "#" ]
@@ -98,8 +100,7 @@ reduceHtmlDataSource block =
                         [ Html.a
                             [ Attr.href <| "#" ++ rawTextToId rawText
                             , css
-                                [ Tw.no_underline |> Css.important
-                                ]
+                                [ Tw.no_underline |> Css.important ]
                             ]
                             (children
                                 ++ [ Html.span
@@ -107,6 +108,8 @@ reduceHtmlDataSource block =
                                             [ Tw.ml_2
                                             , Tw.text_gray_400
                                             , Tw.select_none
+                                            , Css.marginLeft (Css.px -26)
+                                            , Tw.float_left
                                             ]
                                         ]
                                         [ Html.text "#" ]
