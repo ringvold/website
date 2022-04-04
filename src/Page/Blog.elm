@@ -73,7 +73,7 @@ data =
                 )
                 >> DataSource.combine
             )
-        |> DataSource.map (List.filter .draft)
+        |> DataSource.map (List.filter (.draft >> not))
 
 
 draftDecoder : String -> DataSource Bool

@@ -9,14 +9,10 @@ import Html.Styled.Attributes as Attr exposing (css)
 import Json.Encode
 import Markdown.Block as Block
 import Markdown.Html
-import Markdown.Parser
 import Markdown.Renderer
 import Markdown.Scaffolded as Scaffolded exposing (..)
 import OptimizedDecoder as Decode
-import Parser
-import Parser.Advanced
 import Shiki
-import Site
 import Tailwind.Breakpoints as Breakpoints
 import Tailwind.Utilities as Tw
 
@@ -24,8 +20,9 @@ import Tailwind.Utilities as Tw
 renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
 renderer =
     Scaffolded.toRenderer
-        { renderHtml = Markdown.Html.oneOf []
-        , renderMarkdown = Scaffolded.withDataSource reduceHtmlDataSource
+        { renderHtml = Markdown.Html.oneOf htmlRenderers
+        , renderMarkdown =
+            Scaffolded.withDataSource (bumpHeadings 1 >> reduceHtmlDataSource)
         }
 
 
@@ -35,7 +32,7 @@ reduceHtmlDataSource block =
         Scaffolded.Paragraph children ->
             Html.p
                 [ css
-                    [ Tw.py_6
+                    [ Tw.py_4
                     ]
                 ]
                 children
@@ -160,7 +157,19 @@ reduceHtmlDataSource block =
                 |> DataSource.succeed
 
         Scaffolded.BlockQuote children ->
-            Html.blockquote [] children
+            Html.blockquote
+                [ css
+                    [ Tw.italic
+                    , Tw.border_l_4
+                    , Tw.border_green_500
+                    , Tw.px_5
+                    , Tw.my_5
+                    , Breakpoints.md
+                        [ Tw.px_10
+                        ]
+                    ]
+                ]
+                children
                 |> DataSource.succeed
 
         Scaffolded.CodeSpan content ->
@@ -354,6 +363,34 @@ reduceHtmlDataSource block =
             in
             Html.th attrs children
                 |> DataSource.succeed
+
+
+htmlRenderers : List (Markdown.Html.Renderer (List (DataSource (Html msg)) -> DataSource (Html msg)))
+htmlRenderers =
+    [ Markdown.Html.tag "fn"
+        (\id children ->
+            children
+                |> DataSource.combine
+                |> DataSource.map
+                    (\_ ->
+                        Html.sup
+                            []
+                            [ Html.a
+                                [ Attr.href ("#" ++ id)
+                                , css
+                                    [ Tw.no_underline
+                                    , Tw.text_green_500
+                                    , Css.hover
+                                        [ Tw.underline
+                                        ]
+                                    ]
+                                ]
+                                [ Html.text id ]
+                            ]
+                    )
+        )
+        |> Markdown.Html.withAttribute "id"
+    ]
 
 
 shikiDataSource : { body : String, language : Maybe String } -> DataSource (Html msg)
