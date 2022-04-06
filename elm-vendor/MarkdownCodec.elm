@@ -2,6 +2,7 @@ module MarkdownCodec exposing (isPlaceholder, noteTitle, titleAndDescription, wi
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
+import Footnotes
 import List.Extra
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
@@ -179,6 +180,12 @@ withoutFrontmatter renderer filePath =
                     |> DataSource.fromResult
             )
     )
+        |> DataSource.andThen
+            (\blocks ->
+                blocks
+                    |> Footnotes.gatherFootnotes
+                    |> DataSource.succeed
+            )
         |> DataSource.distillSerializeCodec ("markdown-blocks-" ++ filePath)
             (S.list codec)
         |> DataSource.andThen
@@ -233,11 +240,11 @@ codec =
                 Block.HtmlBlock html ->
                     encodeHtmlBlock html
 
-                Block.UnorderedList listItems ->
-                    encodeUnorderedList listItems
+                Block.UnorderedList listSpacing listItems ->
+                    encodeUnorderedList listSpacing listItems
 
-                Block.OrderedList int lists ->
-                    encodeOrderedList int lists
+                Block.OrderedList listSpacing int lists ->
+                    encodeOrderedList listSpacing int lists
 
                 Block.BlockQuote blocks ->
                     encodeBlockQuote blocks
@@ -256,8 +263,8 @@ codec =
         )
         |> S.variant0 Block.ThematicBreak
         |> S.variant1 Block.HtmlBlock htmlCodec
-        |> S.variant1 Block.UnorderedList (S.list listItemCodec)
-        |> S.variant2 Block.OrderedList S.int (S.list (S.list inlineCodec))
+        |> S.variant2 Block.UnorderedList listSpacingCodec (S.list listItemCodec)
+        |> S.variant3 Block.OrderedList listSpacingCodec S.int (S.list (S.list (S.lazy (\() -> codec))))
         |> S.variant1 Block.BlockQuote (S.list (S.lazy (\() -> codec)))
         |> S.variant2 Block.Heading headingCodec (S.list inlineCodec)
         |> S.variant1 Block.Paragraph (S.list inlineCodec)
@@ -268,6 +275,22 @@ codec =
                 |> S.field .language (S.maybe S.string)
                 |> S.finishRecord
             )
+        |> S.finishCustomType
+
+
+listSpacingCodec : S.Codec e Block.ListSpacing
+listSpacingCodec =
+    S.customType
+        (\vLoose vTight value ->
+            case value of
+                Block.Loose ->
+                    vLoose
+
+                Block.Tight ->
+                    vTight
+        )
+        |> S.variant0 Block.Loose
+        |> S.variant0 Block.Tight
         |> S.finishCustomType
 
 
@@ -419,7 +442,7 @@ htmlAttributeCodec =
         |> S.finishRecord
 
 
-listItemCodec : S.Codec Never (Block.ListItem Block.Inline)
+listItemCodec : S.Codec Never (Block.ListItem Block.Block)
 listItemCodec =
     S.customType
         (\encodeListItem value ->
@@ -427,7 +450,7 @@ listItemCodec =
                 Block.ListItem task children ->
                     encodeListItem task children
         )
-        |> S.variant2 Block.ListItem taskCodec (S.list inlineCodec)
+        |> S.variant2 Block.ListItem taskCodec (S.list (S.lazy (\() -> codec)))
         |> S.finishCustomType
 
 

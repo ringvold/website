@@ -15,6 +15,7 @@ import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Breakpoints as Breakpoints
 import Tailwind.Utilities as Tw
+import VirtualDom exposing (Node)
 
 
 renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
@@ -295,7 +296,7 @@ reduceHtmlDataSource block =
                 |> DataSource.succeed
 
         ThematicBreak ->
-            Html.hr [] []
+            Html.hr [ css [ Tw.my_10 ] ] []
                 |> DataSource.succeed
 
         HardLineBreak ->
@@ -367,8 +368,8 @@ reduceHtmlDataSource block =
 
 htmlRenderers : List (Markdown.Html.Renderer (List (DataSource (Html msg)) -> DataSource (Html msg)))
 htmlRenderers =
-    [ Markdown.Html.tag "fn"
-        (\id children ->
+    [ Markdown.Html.tag "fn-ref"
+        (\id count children ->
             children
                 |> DataSource.combine
                 |> DataSource.map
@@ -385,11 +386,78 @@ htmlRenderers =
                                         ]
                                     ]
                                 ]
-                                [ Html.text id ]
+                                [ Html.text <| String.concat [ "[", count, "]" ] ]
                             ]
                     )
         )
         |> Markdown.Html.withAttribute "id"
+        |> Markdown.Html.withAttribute "count"
+    , Markdown.Html.tag "fn"
+        (\id children ->
+            children
+                |> DataSource.combine
+                |> DataSource.map
+                    (\resolvedChildren ->
+                        Html.div [ Attr.class "footnote" ]
+                            resolvedChildren
+                    )
+        )
+        |> Markdown.Html.withAttribute "id"
+    , Markdown.Html.tag "li"
+        (\id children ->
+            children
+                |> DataSource.combine
+                |> DataSource.map
+                    (\resolvedChildren ->
+                        Html.li
+                            [ Attr.id id
+                            , Attr.class "footnote"
+                            ]
+                            resolvedChildren
+                    )
+        )
+        |> Markdown.Html.withAttribute "id"
+    , Markdown.Html.tag "footnote-section"
+        (\children ->
+            children
+                |> DataSource.combine
+                |> DataSource.map
+                    (\resolvedChildren ->
+                        let
+                            --debug =
+                            --    Debug.log "footnote children" resolvedChildren
+                            thechildren =
+                                resolvedChildren
+
+                            --|> List.map (Debug.log "node")
+                        in
+                        Html.div
+                            [ Attr.id "footnotes"
+                            , css
+                                [ Tw.text_base
+                                ]
+                            ]
+                            [ Html.h4
+                                [ css
+                                    [ Tw.text_lg
+                                    , Tw.font_sans
+                                    , Tw.font_medium
+                                    ]
+                                ]
+                                ([ Html.text "Footnotes" ]
+                                    ++ [ Html.ol
+                                            [ css
+                                                [ Tw.px_5
+                                                , Tw.list_decimal
+                                                , Tw.text_sm
+                                                ]
+                                            ]
+                                            thechildren
+                                       ]
+                                )
+                            ]
+                    )
+        )
     ]
 
 

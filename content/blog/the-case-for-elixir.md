@@ -1,15 +1,24 @@
 ---
 title: The case for Elixir
-description: Today I want to give you an introduction to the programming language
-  Elixir, some of its features and why you might want to check it out!
-draft: true
+links:
+  - url: https://www.youtube.com/watch?v=zL2wcqS78UA
+    title: "Video: Why we adopted Elixir"
+  - url: https://blog.discord.com/scaling-elixir-f9b8e1e7c29b
+    title: "Elixir at Discord: Scaling Elixir"
+  - title: "Video: Intro to OTP"
+    url: https://www.youtube.com/watch?v=CJT8wPnmjTM
+  - url: https://www.fastcompany.com/3026758/inside-erlang-the-rare-programming-language-behind-whatsapps-success
+    title: "Erlang at Whatsapp: Inside Erlang, The Rare Programming Language Behind
+      WhatsApp’s Success"
 ---
+
+Today I want to give you an introduction to the programming language Elixir, some of its features and why you might want to check it out!
 
 # The basics
 
 First things first: Elixir is a concurrent functional language that runs on the Erlang VM. It is inspired by many different languages where Ruby and Erlang are most obvious ones based on the syntax.
 
-Elixir is a [strong, dynamically typed language](https://thinkingelixir.com/elixir-in-the-type-system-quadrant/). This puts it in the same category as Ruby and Python and it has optional functionality for compile time type checking as well. Elixirs data structures are immutable, but variables can be reassigned/rebound. <fn id="^rebinding" /> This was a bit strange for me in that I got started with FP through Elm where there are no variables, just constants.
+Elixir is a [strong, dynamically typed language](https://thinkingelixir.com/elixir-in-the-type-system-quadrant/). This puts it in the same category as Ruby and Python and it has optional functionality for compile time type checking as well. Elixirs data structures are immutable, but variables can be reassigned/rebound.<fn-ref id="rebinding" /> This was a bit strange for me in that I got started with FP through Elm where there are no variables, just constants.
 
 Elixir inherits a lot its data structures and related syntax from Erlang which in many ways is its biggest influence. [Elixir Design Goals](https://elixir-lang.org/blog/2013/08/08/elixir-design-goals/) describes the relation to Erlang like this:
 
@@ -23,7 +32,7 @@ Elixir inherits a lot its data structures and related syntax from Erlang which i
 
 This is a great feature of Elixir that we will talk more about later.
 
-As for other inspirations Elixir has docstrings from Python, polymorphism and protocols from Clojure, macros and meta-programming from different Lisps, just to name a few. <fn id="^inspiration"></sup>
+As for other inspirations Elixir has docstrings from Python, polymorphism and protocols from Clojure, macros and meta-programming from different Lisps, just to name a few. <fn-ref id="inspiration" />
 
 ## Hello World!
 
@@ -60,7 +69,7 @@ The project web site says:
 
 # The BEAM and OTP
 
-When talking about the advantages of Elixir it is hard to not talk about the advantages of Erlang and its virtual machine, the BEAM (Bogdan's Erlang Abstract Machine). It is in many ways the biggest selling point for Elixir. We are now talking about the concurrent part of Elixir. Erlang and the BEAM has shown its resiliency over many years, exemplified in giving Ericsson 9 nines (99.9999999%) availability in their AXD301 switch. <fn id="^nine9s" /> It is known for its "let it break" philosophy and self-healing properties and by being compatible with Erlang, Elixir inherits a lot of these traits.
+When talking about the advantages of Elixir it is hard to not talk about the advantages of Erlang and its virtual machine, the BEAM (Bogdan's Erlang Abstract Machine). It is in many ways the biggest selling point for Elixir. We are now talking about the concurrent part of Elixir. Erlang and the BEAM has shown its resiliency over many years, exemplified in giving Ericsson 9 nines (99.9999999%) availability in their AXD301 switch.<fn-ref id="nine9s" /> It is known for its "let it break" philosophy and self-healing properties and by being compatible with Erlang, Elixir inherits a lot of these traits.
 
 Elixirs creator, Jose Valim, attributes one of the motivational factors for the creation of Elixir to the rise of multi-core CPUs and the need to utilize these. Ruby and other languages with a global interperter lock (GIL) limits this, but the Erlang VM and the tools and design prinsiples of OTP have proven to be a great choice for creating concurrent, performant and resilient applications.
 
@@ -86,7 +95,7 @@ These unique principles for processes where they communicate through messages la
 
 As with so many other parts of this article OTP is a big topic and could be a separate article, but I'll try make it short! Today the name is a bit strange but it was created by Ericsson for their telephone switches in the 80s and 90s so in that context in makes more sense.
 
-OTP is an integral part of many Erlang applications. In essence OTP is a set of design principles and standards including tools and libraries to make it easier to create applications that adheres to them. <fn id="^otp"/>
+OTP is an integral part of many Erlang applications. In essence OTP is a set of design principles and standards including tools and libraries to make it easier to create applications that adheres to them. <fn-ref id="otp" /> 
 
 Since Elixir is compatible with OTP we can leverage these principles and technologies that has been battle tested in high-pressure and critical applications for decades!
 
@@ -101,7 +110,9 @@ If you would like to check Elixir out I recommend checking out [the official Get
 
 Psst! By the way: there are other languages that run on the BEAM. [Lisp variants](https://lfe.io/) and lately some work on [strong statically compiled ML-like languges](https://gleam.run/) if you are into that!
 
-[^rebinding]: https://stackoverflow.com/questions/29967086/are-elixir-variables-really-immutable
-[^inspiration]: https://www.quora.com/What-languages-inspired-the-design-of-Elixir-programming-language/answer/Ian-Heggie
-[^nine9s]: https://www.rabbitmq.com/resources/armstrong.pdf
-[^otp]: https://learnyousomeerlang.com/what-is-otp
+<fn id="rebinding">
+[Explanation on how variables work in Elixir](https://stackoverflow.com/questions/29967086/are-elixir-variables-really-immutable)
+</fn>
+<fn id="inspiration">I write some explanations here. And a link: [What languages inspired the design of Elixir (programming language)? - Quora](https://www.quora.com/What-languages-inspired-the-design-of-Elixir-programming-language/answer/Ian-Heggie) </fn>
+<fn id="nine9s">[Concurrency Oriented Programming in Erlang, p27](https://www.rabbitmq.com/resources/armstrong.pdf)</fn>
+<fn id="otp">[What is OTP?](https://learnyousomeerlang.com/what-is-otp)</fn>

@@ -117,12 +117,15 @@ view sharedData page model toMsg pageView =
                     , Tw.pb_4
                     ]
                 ]
-                [ Css.Global.global
-                    (Css.Global.body
+                [ [ Css.Global.body
                         [ Tw.bg_gray_100
                         ]
-                        :: Tw.globalStyles
-                    )
+                  , Css.Global.selector "#footnotes li p"
+                        [ Tw.py_2
+                        ]
+                  ]
+                    ++ Tw.globalStyles
+                    |> Css.Global.global
                 , nav
                 , div
                     [ css
