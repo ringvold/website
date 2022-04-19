@@ -113,6 +113,6 @@ Psst! By the way: there are other languages that run on the BEAM. [Lisp variants
 <fn id="rebinding">
 [Explanation on how variables work in Elixir](https://stackoverflow.com/questions/29967086/are-elixir-variables-really-immutable)
 </fn>
-<fn id="inspiration">I write some explanations here. And a link: [What languages inspired the design of Elixir (programming language)? - Quora](https://www.quora.com/What-languages-inspired-the-design-of-Elixir-programming-language/answer/Ian-Heggie) </fn>
+<fn id="inspiration">[What languages inspired the design of Elixir (programming language)? - Quora](https://www.quora.com/What-languages-inspired-the-design-of-Elixir-programming-language/answer/Ian-Heggie) </fn>
 <fn id="nine9s">[Concurrency Oriented Programming in Erlang, p27](https://www.rabbitmq.com/resources/armstrong.pdf)</fn>
 <fn id="otp">[What is OTP?](https://learnyousomeerlang.com/what-is-otp)</fn>
