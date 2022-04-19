@@ -15,7 +15,6 @@ import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Breakpoints as Breakpoints
 import Tailwind.Utilities as Tw
-import VirtualDom exposing (Node)
 
 
 renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
@@ -165,9 +164,10 @@ reduceHtmlDataSource block =
                     , Tw.border_green_500
                     , Tw.px_5
                     , Tw.my_5
-                    , Breakpoints.md
-                        [ Tw.px_10
-                        ]
+
+                    --, Breakpoints.md
+                    --    [ Tw.px_10
+                    --    ]
                     ]
                 ]
                 children
@@ -423,14 +423,6 @@ htmlRenderers =
                 |> DataSource.combine
                 |> DataSource.map
                     (\resolvedChildren ->
-                        let
-                            --debug =
-                            --    Debug.log "footnote children" resolvedChildren
-                            thechildren =
-                                resolvedChildren
-
-                            --|> List.map (Debug.log "node")
-                        in
                         Html.div
                             [ Attr.id "footnotes"
                             , css
@@ -444,17 +436,16 @@ htmlRenderers =
                                     , Tw.font_medium
                                     ]
                                 ]
-                                ([ Html.text "Footnotes" ]
-                                    ++ [ Html.ol
-                                            [ css
-                                                [ Tw.px_5
-                                                , Tw.list_decimal
-                                                , Tw.text_sm
-                                                ]
-                                            ]
-                                            thechildren
-                                       ]
-                                )
+                                [ Html.text "Footnotes"
+                                , Html.ol
+                                    [ css
+                                        [ Tw.px_5
+                                        , Tw.list_decimal
+                                        , Tw.text_sm
+                                        ]
+                                    ]
+                                    resolvedChildren
+                                ]
                             ]
                     )
         )

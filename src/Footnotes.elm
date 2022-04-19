@@ -23,7 +23,6 @@ gatherFootnotes blocks =
                                             |> List.head
                                             |> Maybe.withDefault ""
 
-                                    --|> Debug.log "lol"
                                     updatedCount =
                                         count + 1
                                 in
@@ -70,16 +69,12 @@ gatherAndMap footnoteRefs blocks =
                 case block of
                     HtmlBlock (HtmlElement "fn" attrs _) ->
                         let
-                            --debug =
-                            --    Debug.log "the block" block
                             text =
                                 attrs
                                     |> List.filter (.name >> (==) "id")
                                     |> List.map .value
                                     |> List.head
                                     |> Maybe.withDefault ""
-
-                            --|> Debug.log "id"
                         in
                         ( Dict.insert text block soFar
                         , Block.HtmlBlock (Block.HtmlComment "removed fn tag")
