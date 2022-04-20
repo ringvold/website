@@ -108,7 +108,7 @@ It might not be your idea of a perfect language. It is not mine either, but that
 
 If you would like to check Elixir out I recommend checking out [the official Getting started guide](https://elixir-lang.org/getting-started/introduction.html) or the interactive guide [Try Elixir](https://try-elixir.herokuapp.com/) and then trying out a project with Phoenix or Nerves. Hands-on experience is always better than something you read on the internet! 🤓
 
-Psst! By the way: there are other languages that run on the BEAM. [Lisp variants](https://lfe.io/) and lately some work on [strong statically compiled ML-like languges](https://gleam.run/) if you are into that!
+Psst! By the way: there are other languages that run on the BEAM. [Lisp variants](https://lfe.io/) and lately some work on [strong statically compiled ML-like languages](https://gleam.run/) if you are into that!
 
 <fn id="rebinding">
 [Explanation on how variables work in Elixir](https://stackoverflow.com/questions/29967086/are-elixir-variables-really-immutable)
