@@ -1,5 +1,6 @@
 ---
 title: Functors - What are they?
+draft: true
 image: >-
   https://images.unsplash.com/photo-1515155075601-23009d0cb6d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=3024&q=80
 
@@ -11,6 +12,8 @@ links:
     url: 'https://soundcloud.com/lambda-cast/16-functors'
 
 ---
+
+*This article has first published as a part of [Bekks 2019 christmas calendar](https://www.bekk.christmas/post/2020/8/functors-redux)*
 
 A functor might sound very strange and esoteric but chances are you have used it in some ways. 
 Some of you probably a lot! In this article we will look at what they are and some reasons they are useful.

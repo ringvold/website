@@ -1,7 +1,8 @@
-module Timestamps exposing (Timestamps, data, format)
+module Timestamps exposing (Timestamps, data, format, toIsoString)
 
 import DataSource exposing (DataSource)
 import DataSource.Port
+import Date
 import DateFormat
 import Json.Encode
 import List.Extra
@@ -62,3 +63,11 @@ format posix =
         ]
         utc
         posix
+
+
+toIsoString : Time.Posix -> String
+toIsoString posix =
+    Date.fromPosix
+        utc
+        posix
+        |> Date.toIsoString

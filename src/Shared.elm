@@ -233,20 +233,20 @@ nav =
                         , Tw.items_center
                         ]
                     ]
-                    [ li [ css [ Tw.mr_3 ] ]
-                        [ a
-                            [ css
-                                [ Tw.inline_block
-                                , Tw.py_2
-                                , Tw.px_4
-                                , Tw.text_gray_900
-                                , Tw.no_underline
-                                , Tw.cursor_pointer
-                                , Css.hover [ Tw.text_gray_900, Tw.underline ]
-                                ]
-                            ]
-                            [ text "About" ]
-                        ]
+                    [--li [ css [ Tw.mr_3 ] ]
+                     --    [ a
+                     --        [ css
+                     --            [ Tw.inline_block
+                     --            , Tw.py_2
+                     --            , Tw.px_4
+                     --            , Tw.text_gray_900
+                     --            , Tw.no_underline
+                     --            , Tw.cursor_pointer
+                     --            , Css.hover [ Tw.text_gray_900, Tw.underline ]
+                     --            ]
+                     --        ]
+                     --        [ text "About" ]
+                     --    ]
                     ]
                 ]
             ]

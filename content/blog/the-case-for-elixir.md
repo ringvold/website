@@ -1,5 +1,6 @@
 ---
 title: The case for Elixir
+description: Today I want to give you an introduction to the programming language Elixir, some of its features and why you might want to check it out!
 links:
   - url: https://www.youtube.com/watch?v=zL2wcqS78UA
     title: "Video: Why we adopted Elixir"
@@ -11,6 +12,8 @@ links:
     title: "Erlang at Whatsapp: Inside Erlang, The Rare Programming Language Behind
       WhatsApp’s Success"
 ---
+
+*This article has first published as a part of [Bekks 2020 christmas calendar](https://www.bekk.christmas/post/2020/4/the-case-for-elixir)*
 
 Today I want to give you an introduction to the programming language Elixir, some of its features and why you might want to check it out!
 

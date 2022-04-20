@@ -34,6 +34,14 @@ type alias RouteParams =
     { slug : String }
 
 
+type alias Data =
+    { info : { title : String, description : String }
+    , slug : String
+    , body : List (Html Msg)
+    , timestamps : Timestamps
+    }
+
+
 page : Page RouteParams Data
 page =
     Page.prerender
@@ -44,26 +52,36 @@ page =
         |> Page.buildNoState { view = view }
 
 
+head :
+    StaticPayload Data RouteParams
+    -> List Head.Tag
+head static =
+    Seo.summary
+        { canonicalUrlOverride = Nothing
+        , siteName = "Harald Ringvold"
+        , image =
+            { url = Pages.Url.external ""
+            , alt = ""
+            , dimensions = Nothing
+            , mimeType = Nothing
+            }
+        , description = static.data.info.description
+        , locale = Nothing
+        , title = static.data.info.title
+        }
+        |> Seo.article
+            { tags = []
+            , section = Nothing
+            , publishedTime = Just (Timestamps.toIsoString static.data.timestamps.created)
+            , modifiedTime = Just (Timestamps.toIsoString static.data.timestamps.updated)
+            , expirationTime = Nothing
+            }
+
+
 routes : DataSource (List RouteParams)
 routes =
     Posts.all
         |> DataSource.map (List.map RouteParams)
-
-
-findFileBySlug : RouteParams -> DataSource String
-findFileBySlug routeParams =
-    Glob.succeed identity
-        |> Glob.match (Glob.literal "content/blog/")
-        |> Glob.match (Glob.literal routeParams.slug)
-        |> Glob.match
-            (Glob.oneOf
-                ( ( "", () )
-                , [ ( "/index", () ) ]
-                )
-            )
-        |> Glob.match (Glob.literal ".md")
-        |> Glob.captureFilePath
-        |> Glob.expectUniqueMatch
 
 
 data : RouteParams -> DataSource Data
@@ -82,32 +100,20 @@ data routeParams =
             )
 
 
-head :
-    StaticPayload Data RouteParams
-    -> List Head.Tag
-head static =
-    Seo.summary
-        { canonicalUrlOverride = Nothing
-        , siteName = "Harald Ringvold"
-        , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "Post image"
-            , dimensions = Nothing
-            , mimeType = Nothing
-            }
-        , description = static.data.info.description
-        , locale = Nothing
-        , title = static.data.info.title
-        }
-        |> Seo.website
-
-
-type alias Data =
-    { info : { title : String, description : String }
-    , slug : String
-    , body : List (Html Msg)
-    , timestamps : Timestamps
-    }
+findFileBySlug : RouteParams -> DataSource String
+findFileBySlug routeParams =
+    Glob.succeed identity
+        |> Glob.match (Glob.literal "content/blog/")
+        |> Glob.match (Glob.literal routeParams.slug)
+        |> Glob.match
+            (Glob.oneOf
+                ( ( "", () )
+                , [ ( "/index", () ) ]
+                )
+            )
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.captureFilePath
+        |> Glob.expectUniqueMatch
 
 
 view :
@@ -135,12 +141,3 @@ view maybeUrl sharedModel static =
         ]
             ++ static.data.body
     }
-
-
-renderMarkdown markdown =
-    case MarkdownHtmlRenderer.render markdown of
-        Ok html ->
-            html
-
-        Err err ->
-            [ Html.text "Error parsing blog post" ]

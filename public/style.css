@@ -32,6 +32,9 @@
   src: local("Source Sans Pro Bold"), local("SourceSansPro-Bold"), url("https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGBgDywzySrQSFSEUM6OqW_g.woff") format("woff");
 }
 
+:root {
+  --frontpage-h2: #555;
+}
 
 .frontpage .button-white {
   border-radius: 20px;

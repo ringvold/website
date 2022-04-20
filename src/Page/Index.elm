@@ -51,8 +51,8 @@ head _ =
         { canonicalUrlOverride = Nothing
         , siteName = "Harald Ringvold"
         , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "ringvold.io logo"
+            { url = Pages.Url.external ""
+            , alt = ""
             , dimensions = Nothing
             , mimeType = Nothing
             }
@@ -102,7 +102,7 @@ view _ _ _ =
                     ]
                 ]
                 [ h1
-                    [-- css
+                    [--css
                      --    [ Tw.text_7xl
                      --    , Tw.my_4
                      --    , Tw.font_medium
@@ -111,7 +111,7 @@ view _ _ _ =
                     ]
                     [ text "Harald Ringvold" ]
                 , h2
-                    [-- css
+                    [--css
                      --    [ Tw.text_5xl
                      --    , Tw.font_light
                      --    , Tw.text_frontpageH2
@@ -120,6 +120,11 @@ view _ _ _ =
                      --    ]
                     ]
                     [ text "Developer" ]
+                , text "Blog"
+                    |> Link.link Route.Blog
+                        [ Attr.class "button-white"
+                        , css [ Tw.no_underline ]
+                        ]
                 , a
                     [ Attr.class "button-white"
                     , Attr.href "https://github.com/ringvold"
@@ -130,28 +135,7 @@ view _ _ _ =
                     , Attr.href "https://twitter.com/hringvold"
                     ]
                     [ text "Twitter" ]
-                , Link.link Route.Blog
-                    [ Attr.class "button-white"
-                    , css [ Tw.no_underline ]
-                    ]
-                  <|
-                    text "Blog"
                 ]
             ]
         ]
     }
-
-
-
--- border-radius: 20px;
--- color: #333;
--- padding: 10px 20px;
--- margin: 0 10px;
--- letter-spacing: 2px;
--- background: #FFF;
--- font-weight: 600;
--- border: 3px solid #FFF;
--- cursor: pointer;
--- text-transform: uppercase;
--- font-size: 12px;
--- text-align: center;

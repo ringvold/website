@@ -55,7 +55,7 @@ reduceHtmlDataSource block =
                         , Attr.attribute "name" (rawTextToId rawText)
                         , css
                             [ Tw.py_2
-                            , Tw.mt_10
+                            , Tw.mt_5
                             , Tw.text_3xl
                             , Tw.font_medium
                             , Tw.font_sans
@@ -88,7 +88,7 @@ reduceHtmlDataSource block =
                         , Attr.attribute "name" (rawTextToId rawText)
                         , css
                             [ Tw.py_2
-                            , Tw.mt_10
+                            , Tw.mt_5
                             , Tw.text_2xl
                             , Tw.font_medium
                             , Tw.font_sans
