@@ -68,9 +68,9 @@ toIsoString : Time.Posix -> String
 toIsoString posix =
     DateFormat.format
         [ DateFormat.yearNumber
-        , DateFormat.text " "
+        , DateFormat.text "-"
         , DateFormat.monthFixed
-        , DateFormat.text ", "
+        , DateFormat.text "-"
         , DateFormat.dayOfMonthFixed
         ]
         utc
