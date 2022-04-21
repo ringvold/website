@@ -1,9 +1,8 @@
 ---
-calendar: functional
 draft: true
 title: Functors - Redux
-ingress: >
-  Last year I wrote [an article](https://functional.christmas/2019/20)
+description: >
+  Last year I wrote an article
   explaining functors in simple terms and show why they are useful. It has well
   received, but some felt it was lacking in details which is true and by design.
   There is more to be said and some crucial details that I glossed over so I
@@ -12,7 +11,6 @@ ingress: >
 ---
 
 *This article has first published as a part of [Bekks 2020 christmas calendar](https://www.bekk.christmas/post/2019/20/functors-what-are-they)*
-
 
 Last year I wrote [an article](https://functional.christmas/2019/20)
 explaining functors in simple terms and show why they are useful. It has well
@@ -69,7 +67,7 @@ type alias User =
     }
 ```
 
-To get the age of a User record we can in Elm use an accessor function which is available for every field defined in a record.<sup>[^accessor]</sup> For the `age` field this function is called `.age` and has the type signature `User -> Int`. It takes a `User` type as an argument and returns a `Int`. In this case it is the content of the age field.
+To get the age of a User record we can in Elm use an accessor function which is available for every field defined in a record. <fn-ref id="accessor"/> For the `age` field this function is called `.age` and has the type signature `User -> Int`. It takes a `User` type as an argument and returns a `Int`. In this case it is the content of the age field.
 
 Go get the age from a user you would to: 
 
@@ -95,7 +93,7 @@ ageAsString : User -> String
 ageAsString = .age >> fromInt
 ```
 
-When the output of a function matches the input of another we can compose them together and make a new function that has the input of the first and output of the second. Note that `>>` is the rightwards compose operator.<sup>[^composeop]</sup>
+When the output of a function matches the input of another we can compose them together and make a new function that has the input of the first and output of the second. Note that `>>` is the rightwards compose operator. <fn-ref id="composeop" />
 
 ### The second law
 
@@ -120,7 +118,7 @@ agesThroughComposeAndMap =
 	List.map (.age >> String.fromInt) users
 ```
 
-In the example above we have a list of users and two constants[^const] that both are a list of the users’ ages as strings. 
+In the example above we have a list of users and two constants<fn-ref id="const" /> that both are a list of the users’ ages as strings. 
 
 The first constant, `agesThroughMaps`, is defined using two map operations. The first run passes the `.age` accessor function to `map` and gives us a list of ages (of type `Int`). In the second map operation the `String.fromInt` is used to create a list of the users’ ages as `String`. 
 
@@ -132,10 +130,10 @@ See full example in Ellie: <https://ellie-app.com/bKhq8M4vyjYa1>
 
 # The consequences of the laws
 
-The laws might seem a bit random and not very helpful at first glance, but it can actually help us a lot. To be a functor the structure/container/context has to follow these laws. It can not do anything weird with the value/values in it or the function that is passed inn. The only thing it can do is apply the function to the value in the context. The functor might have some extra logic around when to apply the function. A list might be empty so there would be nothing to apply the function to and similarly with `Maybe`. Take a look at [last years article](https://functional.christmas/2019/20) to see a more complex example.
+The laws might seem a bit random and not very helpful at first glance, but it can actually help us a lot. To be a functor the structure/container/context has to follow these laws. It can not do anything weird with the value/values in it or the function that is passed inn. The only thing it can do is apply the function to the value in the context. The functor might have some extra logic around when to apply the function. A list might be empty so there would be nothing to apply the function to and similarly with `Maybe`. Take a look at [last years article](https://functional.christmas/2019/20) to see a more complex example. 
 
 With these rules for what constitutes a functor in place the behavior of functors become predictable. So if we see it in code or talk about it with fellow coders we know exactly how it should behave! 😄
 
-[^accessor]: You could use the syntax record.field_name as with JS objects (ex:`user.age`) as well but that does not serve our example that well. :P
-[^composeop]: There is a left compose as well. For our example it would look like: `fromInt << .age` and would create the same function.
-[^const]: In Elm all data structures are immutable and so are variables/binds so they are really constants. Elm does not support shadowing either.
+<fn id="accessor">You could use the syntax record.field_name as with JS objects (ex:`user.age`) as well but that does not serve our example that well. :P</fn>
+<!-- <fn id="composeop">There is a left compose as well. For our example it would look like: `fromInt << .age` and would create the same function.</fn> -->
+<fn id="const">In Elm all data structures are immutable and so are variables/binds so they are really constants. Elm does not support shadowing either.</fn>
