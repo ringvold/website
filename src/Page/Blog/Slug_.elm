@@ -58,7 +58,7 @@ head :
 head static =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "Harald Ringvold"
+        , siteName = "ringvold.io"
         , image =
             { url = Pages.Url.external ""
             , alt = ""

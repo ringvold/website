@@ -2,7 +2,6 @@ module Timestamps exposing (Timestamps, data, format, toIsoString)
 
 import DataSource exposing (DataSource)
 import DataSource.Port
-import Date
 import DateFormat
 import Json.Encode
 import List.Extra
@@ -67,7 +66,12 @@ format posix =
 
 toIsoString : Time.Posix -> String
 toIsoString posix =
-    Date.fromPosix
+    DateFormat.format
+        [ DateFormat.yearNumber
+        , DateFormat.text " "
+        , DateFormat.monthFixed
+        , DateFormat.text ", "
+        , DateFormat.dayOfMonthFixed
+        ]
         utc
         posix
-        |> Date.toIsoString
