@@ -134,12 +134,35 @@ reduceHtmlDataSource block =
                         Block.H6 ->
                             Html.h6
                     )
-                        [ css
+                        [ Attr.id (rawTextToId rawText)
+                        , Attr.attribute "name" (rawTextToId rawText)
+                        , css
                             [ Tw.py_2
+                            , Tw.mt_5
+                            , Tw.text_xl
+                            , Tw.font_medium
                             , Tw.font_sans
                             ]
                         ]
-                        children
+                        [ Html.a
+                            [ Attr.href <| "#" ++ rawTextToId rawText
+                            , css
+                                [ Tw.no_underline |> Css.important ]
+                            ]
+                            (children
+                                ++ [ Html.span
+                                        [ css
+                                            [ Tw.ml_2
+                                            , Tw.text_gray_400
+                                            , Tw.select_none
+                                            , Css.marginLeft (Css.px -26)
+                                            , Tw.float_left
+                                            ]
+                                        ]
+                                        [ Html.text "#" ]
+                                   ]
+                            )
+                        ]
             )
                 |> DataSource.succeed
 
@@ -176,9 +199,11 @@ reduceHtmlDataSource block =
         Scaffolded.CodeSpan content ->
             Html.code
                 [ css
-                    [ Tw.font_semibold
-                    , Tw.font_medium
+                    [ Tw.font_normal
+                    , Tw.text_lg
                     , Css.color (Css.rgb 226 0 124) |> Css.important
+                    , Css.backgroundColor (Css.rgb 220 220 220) |> Css.important
+                    , Tw.p_1
                     ]
                 ]
                 [ Html.text content ]
