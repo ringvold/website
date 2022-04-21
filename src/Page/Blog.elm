@@ -134,5 +134,5 @@ viewBlogEntry entry =
             [ Link.link entry.route [] (text entry.info.title) ]
         , Shared.timestampView entry
         , p [] [ text entry.info.description ]
-        , hr [ css [ Tw.m_10 ] ] []
+        , hr [ css [ Tw.mt_7 ] ] []
         ]
