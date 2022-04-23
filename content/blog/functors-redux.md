@@ -122,7 +122,7 @@ In the example above we have a list of users and two constants<fn-ref id="const"
 
 The first constant, `agesThroughMaps`, is defined using two map operations. The first run passes the `.age` accessor function to `map` and gives us a list of ages (of type `Int`). In the second map operation the `String.fromInt` is used to create a list of the users’ ages as `String`. 
 
-For the last constant, `agesTthroughMaps`, the list of the users age is created with one map operation where the function passed in to `map` is composed of the `.age` and `fromInt` functions with the compose operator (`>>`). 
+For the last constant, `agesThroughComposeAndMap`, the list of the users age is created with one map operation where the function passed in to `map` is composed of the `.age` and `fromInt` functions with the compose operator (`>>`). 
 
 And this is the result of the second law: the values in the two constants should be equal. A list of strings: `["20", "22", "30"]`
 

@@ -1,8 +1,7 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
-import Bool
+import Css
 import DataSource exposing (DataSource)
-import DataSource.File
 import DataSource.Port
 import Head
 import Head.Seo as Seo
@@ -51,7 +50,7 @@ type alias Data =
 
 type alias BlogEntry =
     { info : { title : String, description : String }
-    , draft : Bool
+    , isDraft : Bool
     , route : Route
     , timestamps : Timestamps
     }
@@ -65,7 +64,7 @@ data =
                 (\{ slug, filePath } ->
                     DataSource.map4 BlogEntry
                         (MarkdownCodec.titleAndDescription filePath)
-                        (draftDecoder filePath)
+                        (Posts.draftDecoder filePath)
                         (DataSource.succeed <| Route.Blog__Slug_ { slug = slug })
                         (Timestamps.data filePath)
                 )
@@ -77,7 +76,7 @@ data =
                     posts
 
                 else
-                    List.filter (.draft >> not) posts
+                    List.filter (.isDraft >> not) posts
             )
             isDev
 
@@ -86,16 +85,7 @@ isDev : DataSource Bool
 isDev =
     DataSource.Port.get "environmentVariable"
         (Json.Encode.string "isDev")
-        Decode.string
-        |> DataSource.map (Bool.fromString >> Maybe.withDefault False)
-
-
-draftDecoder : String -> DataSource Bool
-draftDecoder filePath =
-    DataSource.File.onlyFrontmatter
-        (Decode.optionalField "draft" Decode.bool)
-        filePath
-        |> DataSource.map (Maybe.withDefault False)
+        Decode.bool
 
 
 head :
@@ -145,8 +135,30 @@ viewBlogEntry entry =
                 , Tw.text_3xl
                 ]
             ]
-            [ Link.link entry.route [] (text entry.info.title) ]
+            [ Link.link entry.route [] (text entry.info.title)
+            , draftIndicator entry.isDraft
+            ]
         , Shared.timestampView entry
         , p [] [ text entry.info.description ]
         , hr [ css [ Tw.mt_7 ] ] []
         ]
+
+
+draftIndicator : Bool -> Html msg
+draftIndicator isDraft =
+    if isDraft then
+        span
+            [ css
+                [ Tw.mt_2
+                , Tw.font_normal
+                , Tw.text_gray_600
+                , Tw.text_lg
+                , Tw.select_none
+                , Css.marginLeft (Css.em -3.5)
+                , Tw.float_left
+                ]
+            ]
+            [ text "Draft" ]
+
+    else
+        text ""

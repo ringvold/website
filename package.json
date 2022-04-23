@@ -1,7 +1,7 @@
 {
   "name": "elm-pages-app",
   "scripts": {
-    "start": "elm-pages dev",
+    "start": "isDev=true elm-pages dev",
     "build": "elm-pages build",
     "tailwind": "elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js"
   },

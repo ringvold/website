@@ -40,9 +40,9 @@ module.exports = {
     environmentVariable: async function (name) {
         const result = process.env[name];
         if (result) {
-            return result;
+            return result == 'true';
         } else {
-            throw `No environment variable called ${name}`;
+            return false;
         }
     },
 };

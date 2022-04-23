@@ -1,14 +1,13 @@
 module Page.Blog.Slug_ exposing (Data, Model, Msg, page)
 
+import Css
 import DataSource exposing (DataSource)
-import DataSource.File
 import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import MarkdownCodec
-import MarkdownHtmlRenderer
 import MarkdownHtmlRenderer2
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -37,6 +36,7 @@ type alias RouteParams =
 type alias Data =
     { info : { title : String, description : String }
     , image : Maybe String
+    , isDraft : Bool
     , slug : String
     , body : List (Html Msg)
     , timestamps : Timestamps
@@ -90,9 +90,10 @@ data routeParams =
     findFileBySlug routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.map5 Data
+                DataSource.map6 Data
                     (MarkdownCodec.titleAndDescription filePath)
                     (MarkdownCodec.imageFromFrontmatter filePath)
+                    (Posts.draftDecoder filePath)
                     (DataSource.succeed routeParams.slug)
                     (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer
                         filePath
@@ -138,8 +139,33 @@ view maybeUrl sharedModel static =
                 , Tw.text_3xl
                 ]
             ]
-            [ Html.text static.data.info.title ]
+            [ Html.text static.data.info.title
+            ]
         , Shared.timestampView static.data
+        , draftIndicator static.data.isDraft
         ]
             ++ static.data.body
     }
+
+
+draftIndicator : Bool -> Html msg
+draftIndicator isDraft =
+    if isDraft then
+        div
+            [ css
+                [ Tw.mt_2
+                , Tw.text_gray_600
+                , Tw.text_lg
+                , Tw.select_none
+                , Tw.w_20
+                , Tw.float_left
+                , Tw.top_2
+                , Css.marginTop (Css.em -4.5)
+                , Css.marginLeft (Css.em -4.5)
+                , Css.position Css.sticky
+                ]
+            ]
+            [ text "This is a draft" ]
+
+    else
+        text ""
