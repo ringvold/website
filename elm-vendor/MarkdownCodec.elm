@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (isPlaceholder, noteTitle, titleAndDescription, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (imageFromFrontmatter, isPlaceholder, titleAndDescription, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -162,6 +162,13 @@ titleFromFrontmatter : String -> DataSource (Maybe String)
 titleFromFrontmatter filePath =
     StaticFile.onlyFrontmatter
         (OptimizedDecoder.optionalField "title" OptimizedDecoder.string)
+        filePath
+
+
+imageFromFrontmatter : String -> DataSource (Maybe String)
+imageFromFrontmatter filePath =
+    StaticFile.onlyFrontmatter
+        (OptimizedDecoder.optionalField "image" OptimizedDecoder.string)
         filePath
 
 

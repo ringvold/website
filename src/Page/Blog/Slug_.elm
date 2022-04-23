@@ -36,6 +36,7 @@ type alias RouteParams =
 
 type alias Data =
     { info : { title : String, description : String }
+    , image : Maybe String
     , slug : String
     , body : List (Html Msg)
     , timestamps : Timestamps
@@ -89,8 +90,9 @@ data routeParams =
     findFileBySlug routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.map4 Data
+                DataSource.map5 Data
                     (MarkdownCodec.titleAndDescription filePath)
+                    (MarkdownCodec.imageFromFrontmatter filePath)
                     (DataSource.succeed routeParams.slug)
                     (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer
                         filePath

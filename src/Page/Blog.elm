@@ -1,11 +1,14 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
+import Bool
 import DataSource exposing (DataSource)
 import DataSource.File
+import DataSource.Port
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
+import Json.Encode
 import Link
 import MarkdownCodec
 import OptimizedDecoder as Decode exposing (Decoder)
@@ -54,11 +57,6 @@ type alias BlogEntry =
     }
 
 
-posts : DataSource (List String)
-posts =
-    Posts.all
-
-
 data : DataSource Data
 data =
     Posts.all2
@@ -73,7 +71,23 @@ data =
                 )
                 >> DataSource.combine
             )
-        |> DataSource.map (List.filter (.draft >> not))
+        |> DataSource.map2
+            (\isDevEnv posts ->
+                if isDevEnv then
+                    posts
+
+                else
+                    List.filter (.draft >> not) posts
+            )
+            isDev
+
+
+isDev : DataSource Bool
+isDev =
+    DataSource.Port.get "environmentVariable"
+        (Json.Encode.string "isDev")
+        Decode.string
+        |> DataSource.map (Bool.fromString >> Maybe.withDefault False)
 
 
 draftDecoder : String -> DataSource Bool

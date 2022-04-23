@@ -37,6 +37,14 @@ module.exports = {
             filePath,
         ]);
     },
+    environmentVariable: async function (name) {
+        const result = process.env[name];
+        if (result) {
+            return result;
+        } else {
+            throw `No environment variable called ${name}`;
+        }
+    },
 };
 
 function execPromise(cmd) {
