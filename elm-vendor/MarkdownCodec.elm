@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (imageFromFrontmatter, isPlaceholder, titleAndDescription, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (descriptionFromFrontmatter, imageFromFrontmatter, titleAndDescription, titleAndDescription2, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -9,75 +9,7 @@ import Markdown.Parser
 import Markdown.Renderer
 import OptimizedDecoder exposing (Decoder)
 import Serialize as S
-
-
-isPlaceholder : String -> DataSource (Maybe ())
-isPlaceholder filePath =
-    filePath
-        |> StaticFile.bodyWithoutFrontmatter
-        |> DataSource.andThen
-            (\rawContent ->
-                Markdown.Parser.parse rawContent
-                    |> Result.mapError (\_ -> "Markdown error")
-                    |> Result.map
-                        (\blocks ->
-                            List.any
-                                (\block ->
-                                    case block of
-                                        Block.Heading _ inlines ->
-                                            False
-
-                                        _ ->
-                                            True
-                                )
-                                blocks
-                                |> not
-                        )
-                    |> DataSource.fromResult
-            )
-        |> DataSource.distillSerializeCodec (filePath ++ "-is-placeholder") S.bool
-        |> DataSource.map
-            (\bool ->
-                if bool then
-                    Nothing
-
-                else
-                    Just ()
-            )
-
-
-noteTitle : String -> DataSource String
-noteTitle filePath =
-    titleFromFrontmatter filePath
-        |> DataSource.andThen
-            (\maybeTitle ->
-                maybeTitle
-                    |> Maybe.map DataSource.succeed
-                    |> Maybe.withDefault
-                        (StaticFile.bodyWithoutFrontmatter filePath
-                            |> DataSource.andThen
-                                (\rawContent ->
-                                    Markdown.Parser.parse rawContent
-                                        |> Result.mapError (\_ -> "Markdown error")
-                                        |> Result.map
-                                            (\blocks ->
-                                                List.Extra.findMap
-                                                    (\block ->
-                                                        case block of
-                                                            Block.Heading Block.H1 inlines ->
-                                                                Just (Block.extractInlineText inlines)
-
-                                                            _ ->
-                                                                Nothing
-                                                    )
-                                                    blocks
-                                            )
-                                        |> Result.andThen (Result.fromMaybe <| "Expected to find an H1 heading for page " ++ filePath)
-                                        |> DataSource.fromResult
-                                )
-                        )
-            )
-        |> DataSource.distillSerializeCodec ("note-title-" ++ filePath) S.string
+import Shared exposing (Data)
 
 
 titleAndDescription : String -> DataSource { title : String, description : String }
@@ -129,6 +61,20 @@ titleAndDescription filePath =
             )
 
 
+titleAndDescription2 : String -> DataSource { title : String, description : String }
+titleAndDescription2 filePath =
+    DataSource.succeed (\title description -> { title = title, description = description })
+        |> DataSource.andMap (titleFromFrontmatter filePath)
+        |> DataSource.andMap (descriptionFromFrontmatter filePath)
+
+
+descriptionParser : String -> Result String (List Block)
+descriptionParser description =
+    description
+        |> Markdown.Parser.parse
+        |> Result.mapError (\_ -> "Couldn't parse description markdown.")
+
+
 findH1 : List Block -> Maybe String
 findH1 blocks =
     List.Extra.findMap
@@ -158,11 +104,36 @@ findDescription blocks =
         |> Maybe.withDefault ""
 
 
-titleFromFrontmatter : String -> DataSource (Maybe String)
+titleFromFrontmatter : String -> DataSource String
 titleFromFrontmatter filePath =
     StaticFile.onlyFrontmatter
-        (OptimizedDecoder.optionalField "title" OptimizedDecoder.string)
+        (OptimizedDecoder.field "title" OptimizedDecoder.string)
         filePath
+
+
+descriptionFromFrontmatter : String -> DataSource String
+descriptionFromFrontmatter filePath =
+    StaticFile.onlyFrontmatter
+        (OptimizedDecoder.optionalField "description" OptimizedDecoder.string)
+        filePath
+        |> DataSource.andThen
+            (\desc ->
+                case desc of
+                    Just description ->
+                        descriptionParser description
+                            |> Result.map findDescription
+                            |> DataSource.fromResult
+
+                    Nothing ->
+                        StaticFile.bodyWithoutFrontmatter filePath
+                            |> DataSource.andThen
+                                (\rawContent ->
+                                    Markdown.Parser.parse rawContent
+                                        |> Result.mapError (\_ -> "Markdown error")
+                                        |> Result.map findDescription
+                                        |> DataSource.fromResult
+                                )
+            )
 
 
 imageFromFrontmatter : String -> DataSource (Maybe String)

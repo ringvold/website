@@ -63,7 +63,7 @@ data =
             (List.map
                 (\{ slug, filePath } ->
                     DataSource.map4 BlogEntry
-                        (MarkdownCodec.titleAndDescription filePath)
+                        (MarkdownCodec.titleAndDescription2 filePath)
                         (Posts.draftDecoder filePath)
                         (DataSource.succeed <| Route.Blog__Slug_ { slug = slug })
                         (Timestamps.data filePath)
