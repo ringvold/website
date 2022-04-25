@@ -14,6 +14,7 @@ import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Path
 import Posts
 import Route exposing (Route)
 import Shared
@@ -96,10 +97,10 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = "ringvold.io"
         , image =
-            { url = Pages.Url.external ""
-            , alt = ""
+            { url = Pages.Url.fromPath <| Path.fromString "bg.jpg"
+            , alt = "Background"
             , dimensions = Nothing
-            , mimeType = Nothing
+            , mimeType = Just "image/jpeg"
             }
         , description = "Harald Ringvolds blog"
         , locale = Nothing

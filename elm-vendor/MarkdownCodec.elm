@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (descriptionFromFrontmatter, imageFromFrontmatter, titleAndDescription, titleAndDescription2, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (descriptionFromFrontmatter, imageFromFrontmatter, imageOrUnsplashFromFrontmatter, titleAndDescription, titleAndDescription2, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -10,6 +10,7 @@ import Markdown.Renderer
 import OptimizedDecoder exposing (Decoder)
 import Serialize as S
 import Shared exposing (Data)
+import UnsplashImage
 
 
 titleAndDescription : String -> DataSource { title : String, description : String }
@@ -141,6 +142,27 @@ imageFromFrontmatter filePath =
     StaticFile.onlyFrontmatter
         (OptimizedDecoder.optionalField "image" OptimizedDecoder.string)
         filePath
+
+
+imageOrUnsplashFromFrontmatter : String -> DataSource (Maybe String)
+imageOrUnsplashFromFrontmatter filePath =
+    filePath
+        |> StaticFile.onlyFrontmatter
+            (OptimizedDecoder.map2 (\image unsplash -> { image = image, unsplash = unsplash })
+                (OptimizedDecoder.optionalField "image" OptimizedDecoder.string)
+                (OptimizedDecoder.optionalField "unsplash" OptimizedDecoder.string)
+            )
+        |> DataSource.map
+            (\result ->
+                case result.unsplash of
+                    Just id ->
+                        UnsplashImage.fromId id
+                            |> UnsplashImage.rawUrl
+                            |> Just
+
+                    Nothing ->
+                        result.image
+            )
 
 
 withoutFrontmatter :

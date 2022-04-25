@@ -1,8 +1,7 @@
 ---
 title: Functors - What are they?
 draft: true
-image: >-
-  https://images.unsplash.com/photo-1515155075601-23009d0cb6d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=3024&q=80
+unsplash: 1515155075601-23009d0cb6d4
 description: >
   *This article has first published as a part of [Bekks 2019 christmas calendar](https://www.bekk.christmas/post/2020/8/functors-redux)*.
 

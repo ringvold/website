@@ -13,6 +13,7 @@ import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Path
 import Posts
 import Shared
 import Tailwind.Breakpoints as Breakpoints
@@ -61,7 +62,7 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = "ringvold.io"
         , image =
-            { url = Pages.Url.external ""
+            { url = Pages.Url.fromPath <| Path.fromString <| Maybe.withDefault "" static.data.image
             , alt = ""
             , dimensions = Nothing
             , mimeType = Nothing
@@ -92,7 +93,7 @@ data routeParams =
             (\filePath ->
                 DataSource.map6 Data
                     (MarkdownCodec.titleAndDescription filePath)
-                    (MarkdownCodec.imageFromFrontmatter filePath)
+                    (MarkdownCodec.imageOrUnsplashFromFrontmatter filePath)
                     (Posts.draftDecoder filePath)
                     (DataSource.succeed routeParams.slug)
                     (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer
@@ -143,6 +144,7 @@ view maybeUrl sharedModel static =
             ]
         , Shared.timestampView static.data
         , draftIndicator static.data.isDraft
+        , imageHtml static.data.image
         ]
             ++ static.data.body
     }
@@ -169,3 +171,13 @@ draftIndicator isDraft =
 
     else
         text ""
+
+
+imageHtml : Maybe String -> Html msg
+imageHtml imageSrc =
+    case imageSrc of
+        Just src ->
+            img [ Attr.src (Debug.log "src" src) ] []
+
+        Nothing ->
+            text ""
