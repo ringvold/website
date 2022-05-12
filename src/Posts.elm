@@ -6,8 +6,8 @@ import DataSource.Glob as Glob
 import OptimizedDecoder as Decode exposing (Decoder)
 
 
-all : DataSource (List String)
-all =
+allFileNames : DataSource (List String)
+allFileNames =
     Glob.succeed identity
         |> Glob.match (Glob.literal "content/blog/")
         |> Glob.capture Glob.wildcard
@@ -21,8 +21,8 @@ type alias Post =
     }
 
 
-all2 : DataSource (List Post)
-all2 =
+all : DataSource (List Post)
+all =
     Glob.succeed Post
         |> Glob.match (Glob.literal "content/blog/")
         |> Glob.capture Glob.wildcard

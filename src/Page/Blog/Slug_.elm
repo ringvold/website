@@ -82,7 +82,7 @@ head static =
 
 routes : DataSource (List RouteParams)
 routes =
-    Posts.all
+    Posts.allFileNames
         |> DataSource.map (List.map RouteParams)
 
 

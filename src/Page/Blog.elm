@@ -59,7 +59,7 @@ type alias BlogEntry =
 
 data : DataSource Data
 data =
-    Posts.all2
+    Posts.all
         |> DataSource.andThen
             (List.map
                 (\{ slug, filePath } ->
