@@ -177,7 +177,7 @@ imageHtml : Maybe String -> Html msg
 imageHtml imageSrc =
     case imageSrc of
         Just src ->
-            img [ Attr.src (Debug.log "src" src) ] []
+            img [ Attr.src src ] []
 
         Nothing ->
             text ""
