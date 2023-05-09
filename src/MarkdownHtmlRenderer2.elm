@@ -423,20 +423,10 @@ htmlRenderers =
                 |> DataSource.combine
                 |> DataSource.map
                     (\resolvedChildren ->
-                        Html.div [ Attr.class "footnote" ]
-                            resolvedChildren
-                    )
-        )
-        |> Markdown.Html.withAttribute "id"
-    , Markdown.Html.tag "li"
-        (\id children ->
-            children
-                |> DataSource.combine
-                |> DataSource.map
-                    (\resolvedChildren ->
                         Html.li
-                            [ Attr.id id
-                            , Attr.class "footnote"
+                            [ Attr.class "footnote"
+                            , Attr.id id
+                            , css [ Css.target [ Tw.bg_gray_200, Tw.rounded ] ]
                             ]
                             resolvedChildren
                     )
@@ -462,15 +452,15 @@ htmlRenderers =
                                     ]
                                 ]
                                 [ Html.text "Footnotes"
-                                , Html.ol
-                                    [ css
-                                        [ Tw.px_5
-                                        , Tw.list_decimal
-                                        , Tw.text_sm
-                                        ]
-                                    ]
-                                    resolvedChildren
                                 ]
+                            , Html.ol
+                                [ css
+                                    [ Tw.px_5
+                                    , Tw.list_decimal
+                                    , Tw.text_sm
+                                    ]
+                                ]
+                                resolvedChildren
                             ]
                     )
         )

@@ -5,10 +5,46 @@ import Markdown.Block as Block exposing (..)
 import Tailwind.Utilities exposing (block)
 
 
+
+{-
+   Usage:
+   Where you want to reference a footnote ([1]): `<fn-ref id="some-note-id">`
+   Some where in the document you write your footnote like this: `<fn id="some-note-id">This is the footnote. Lets add some mores stuff here</fn>`
+   These note will be moved to the end of the document.
+-}
+
+
+type alias Footnote =
+    { id : String
+    , index : Int
+    , block : Block
+    }
+
+
+type alias FootnoteRef =
+    ( Int, Inline )
+
+
+{-| In elm-markdown some html elements are classified as Blocks and some are Inlines.
+For our purpose `fn-ref`s are HtmlInlines as they allwasy will be inside other
+html elements and `fn`s are considered Blocks as one most likely will put the
+notes definitions them self on root level. Todo: Add support for notes defined inline.
+The Block list is a tokenized version of the markdown.
+
+The following is a simplified version of what happens in gatherFootnotes:
+
+1.  Finds all the footnote refs
+2.  Use the refs to identify and match the notes (fn-tags) and remove those blocks from the block list and into a separate list
+3.  In the same pass we find and add some metadata to the fn-ref-tags so we can render them as numbers in brackets
+4.  Finally the removed fn blocks are added back at the end of the block list
+
+This function should probably have a better name.
+
+-}
 gatherFootnotes : List Block -> List Block
 gatherFootnotes blocks =
     let
-        footnoteRefs : Dict.Dict String ( Int, Inline )
+        footnoteRefs : Dict.Dict String FootnoteRef
         footnoteRefs =
             blocks
                 |> inlineFoldl
@@ -37,16 +73,17 @@ gatherFootnotes blocks =
         ( footnotes, updatedBlocks ) =
             gatherAndMap footnoteRefs blocks
 
-        updatedFootnotes =
+        footnoteSection =
             Dict.values footnotes
+                |> List.sortBy (\note -> note.index)
                 |> List.map
-                    (\block ->
-                        case block of
+                    (\note ->
+                        case note.block of
                             HtmlBlock (HtmlElement "fn" attrs children) ->
-                                HtmlBlock (HtmlElement "li" attrs children)
+                                HtmlBlock (HtmlElement "fn" ({ name = "ftnt", value = "true" } :: attrs) children)
 
                             _ ->
-                                block
+                                note.block
                     )
                 |> (\fts ->
                         [ Block.ThematicBreak
@@ -58,40 +95,52 @@ gatherFootnotes blocks =
                         ]
                    )
     in
-    updatedBlocks ++ updatedFootnotes
+    updatedBlocks ++ footnoteSection
 
 
-gatherAndMap : Dict.Dict String ( Int, Inline ) -> List Block -> ( Dict.Dict String Block, List Block )
+gatherAndMap : Dict.Dict String FootnoteRef -> List Block -> ( Dict.Dict String Footnote, List Block )
 gatherAndMap footnoteRefs blocks =
     blocks
-        |> myMapAndAccumulate
-            (\soFar block ->
+        |> altMapAndAccumulate
+            (\gatheredFootnotes block ->
                 case block of
                     HtmlBlock (HtmlElement "fn" attrs _) ->
                         let
-                            text =
+                            footnoteId =
                                 attrs
                                     |> List.filter (.name >> (==) "id")
                                     |> List.map .value
                                     |> List.head
                                     |> Maybe.withDefault ""
+
+                            occurencesNr =
+                                footnoteRefs
+                                    |> Dict.get footnoteId
+                                    |> Maybe.map Tuple.first
+                                    |> Maybe.withDefault 0
+
+                            footnote =
+                                { id = footnoteId
+                                , index = occurencesNr
+                                , block = block
+                                }
                         in
-                        ( Dict.insert text block soFar
+                        ( Dict.insert footnoteId footnote gatheredFootnotes
                         , Block.HtmlBlock (Block.HtmlComment "removed fn tag")
                         )
 
                     Paragraph inlines ->
-                        ( soFar
+                        ( gatheredFootnotes
                         , Block.Paragraph <| mapInlines inlines footnoteRefs
                         )
 
                     _ ->
-                        ( soFar, block )
+                        ( gatheredFootnotes, block )
             )
             Dict.empty
 
 
-mapInlines : List Inline -> Dict.Dict String ( Int, Inline ) -> List Inline
+mapInlines : List Inline -> Dict.Dict String FootnoteRef -> List Inline
 mapInlines inlines footnoteRefs =
     inlines
         |> List.map
@@ -131,11 +180,14 @@ mapInlines inlines footnoteRefs =
             )
 
 
-myMapAndAccumulate : (soFar -> Block -> ( soFar, mappedValue )) -> soFar -> List Block -> ( soFar, List mappedValue )
-myMapAndAccumulate mapFn initialValue blocks =
+{-| Alternative mapAndAccumulate.
+This is mapAndAccumulate from Markdown.Block but uses custom fold function
+-}
+altMapAndAccumulate : (soFar -> Block -> ( soFar, mappedValue )) -> soFar -> List Block -> ( soFar, List mappedValue )
+altMapAndAccumulate mapFn initialValue blocks =
     let
         ( accFinal, generatedList ) =
-            myFoldl
+            altFoldl
                 (\block ( acc1, ys ) ->
                     let
                         ( acc2, mappedBlock ) =
@@ -149,45 +201,15 @@ myMapAndAccumulate mapFn initialValue blocks =
     ( accFinal, List.reverse generatedList )
 
 
-myFoldl : (Block -> acc -> acc) -> acc -> List Block -> acc
-myFoldl function acc list =
+{-| This version of foldl does not add child blocks to remainingBlocks, effectivly
+identifying footnotes and removing fn-tags in one pass.
+Can not remember exacly why it is done this way but it works 🤷
+-}
+altFoldl : (Block -> acc -> acc) -> acc -> List Block -> acc
+altFoldl function acc list =
     case list of
         [] ->
             acc
 
         block :: remainingBlocks ->
-            case block of
-                HtmlBlock html ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                UnorderedList tight blocks ->
-                    let
-                        childBlocks : List Block
-                        childBlocks =
-                            blocks
-                                |> List.concatMap (\(ListItem _ children) -> children)
-                    in
-                    myFoldl function (function block acc) remainingBlocks
-
-                OrderedList _ int blocks ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                BlockQuote blocks ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                -- These cases don't have nested blocks
-                -- So no recursion needed
-                Heading _ _ ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                Paragraph _ ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                Table _ _ ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                CodeBlock _ ->
-                    myFoldl function (function block acc) remainingBlocks
-
-                ThematicBreak ->
-                    myFoldl function (function block acc) remainingBlocks
+            altFoldl function (function block acc) remainingBlocks
