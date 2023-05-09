@@ -200,7 +200,7 @@ reduceHtmlDataSource block =
             Html.code
                 [ css
                     [ Tw.font_normal
-                    , Tw.text_lg
+                    , Tw.text_base
                     , Css.color (Css.rgb 226 0 124) |> Css.important
                     , Css.backgroundColor (Css.rgb 220 220 220) |> Css.important
                     , Tw.p_1
