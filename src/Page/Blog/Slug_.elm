@@ -8,7 +8,7 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import MarkdownCodec
-import MarkdownHtmlRenderer2
+import MarkdownHtmlRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -96,7 +96,7 @@ data routeParams =
                     (MarkdownCodec.imageOrUnsplashFromFrontmatter filePath)
                     (Posts.draftDecoder filePath)
                     (DataSource.succeed routeParams.slug)
-                    (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer2.renderer
+                    (MarkdownCodec.withoutFrontmatter MarkdownHtmlRenderer.renderer
                         filePath
                         |> DataSource.resolve
                     )
